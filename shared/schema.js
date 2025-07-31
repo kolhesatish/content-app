@@ -30,8 +30,3 @@ export const insertContentGenerationSchema = createInsertSchema(contentGeneratio
   topic: true,
   generatedContent: true,
 });
-
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-export type InsertContentGeneration = z.infer<typeof insertContentGenerationSchema>;
-export type ContentGeneration = typeof contentGenerations.$inferSelect;

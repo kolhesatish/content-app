@@ -1,0 +1,331 @@
+'use client'
+
+import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { Image, Video, Zap, Copy, RefreshCw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
+
+export default function InstagramGenerator() {
+  const { toast } = useToast()
+  const [currentStep, setCurrentStep] = useState(1)
+  const [formData, setFormData] = useState({
+    contentType: 'post',
+    topic: '',
+    captionPreference: 'yes',
+    styles: []
+  })
+  const [generatedContent, setGeneratedContent] = useState(null)
+
+  const generateMutation = useMutation({
+    mutationFn: async (data) => {
+      const response = await fetch('/api/content/instagram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate content')
+      }
+      
+      return response.json()
+    },
+    onSuccess: (data) => {
+      setGeneratedContent(data)
+      setCurrentStep(3)
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: 'Failed to generate content. Please try again.',
+        variant: 'destructive',
+      })
+    }
+  })
+
+  const handleContentTypeSelect = (type) => {
+    setFormData(prev => ({ ...prev, contentType: type }))
+  }
+
+  const handleStyleToggle = (style) => {
+    setFormData(prev => ({
+      ...prev,
+      styles: prev.styles.includes(style)
+        ? prev.styles.filter(s => s !== style)
+        : [...prev.styles, style]
+    }))
+  }
+
+  const handleGenerate = () => {
+    if (!formData.topic.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a topic for your content.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    generateMutation.mutate({
+      topic: formData.topic,
+      contentType: formData.contentType,
+      options: {
+        captionPreference: formData.captionPreference,
+        styles: formData.styles
+      }
+    })
+  }
+
+  const copyToClipboard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      toast({
+        title: 'Copied!',
+        description: 'Content copied to clipboard.',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to copy content.',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const resetForm = () => {
+    setCurrentStep(1)
+    setFormData({
+      contentType: 'post',
+      topic: '',
+      captionPreference: 'yes',
+      styles: []
+    })
+    setGeneratedContent(null)
+  }
+
+  const regenerate = () => {
+    handleGenerate()
+  }
+
+  return (
+    <div className="animate-slide-up">
+      {/* Progress Steps */}
+      <div className="flex justify-center mb-12">
+        <div className="flex items-center space-x-4">
+          {[1, 2, 3].map((step) => (
+            <div key={step} className="flex items-center">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
+                step <= currentStep
+                  ? "bg-primary text-white"
+                  : "bg-gray-600 text-gray-400"
+              }`}>
+                {step}
+              </div>
+              <span className={`ml-2 text-sm font-medium transition-colors ${
+                step <= currentStep ? "text-white" : "text-gray-400"
+              }`}>
+                {step === 1 ? "Content Type" : step === 2 ? "Options" : "Generate"}
+              </span>
+              {step < 3 && <div className="w-8 h-0.5 bg-gray-600 ml-4"></div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Step 1: Content Type Selection */}
+      {currentStep === 1 && (
+        <div className="glass-card rounded-2xl p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">What type of content do you want to create?</h2>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            {[
+              { type: 'post', icon: Image, title: 'Post', description: 'Static image posts with captions' },
+              { type: 'reel', icon: Video, title: 'Reel', description: 'Short-form video content' },
+              { type: 'story', icon: Zap, title: 'Story', description: '24-hour disappearing content' }
+            ].map(({ type, icon: Icon, title, description }) => (
+              <div
+                key={type}
+                onClick={() => handleContentTypeSelect(type)}
+                className={`content-type-card glass p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform ${
+                  formData.contentType === type ? "selected border-primary bg-primary/10" : ""
+                }`}
+              >
+                <div className="text-center">
+                  <Icon className="text-3xl text-primary mb-4 mx-auto" size={48} />
+                  <h3 className="text-lg font-semibold mb-2">{title}</h3>
+                  <p className="text-sm text-gray-400">{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-3">What's your topic or idea?</label>
+            <Textarea
+              value={formData.topic}
+              onChange={(e) => setFormData(prev => ({ ...prev, topic: e.target.value }))}
+              className="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:border-primary focus:outline-none resize-none"
+              rows={3}
+              placeholder="e.g., Tips for morning productivity, Behind the scenes of my workspace, Recipe for healthy smoothie..."
+            />
+          </div>
+
+          <Button
+            onClick={() => setCurrentStep(2)}
+            className="w-full gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            disabled={!formData.topic.trim()}
+          >
+            Continue to Options
+          </Button>
+        </div>
+      )}
+
+      {/* Step 2: Content Options */}
+      {currentStep === 2 && (
+        <div className="glass-card rounded-2xl p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">Customize your content</h2>
+          
+          <div className="space-y-6 mb-8">
+            <div>
+              <label className="block text-sm font-medium mb-3">Do you want a caption?</label>
+              <div className="flex gap-4">
+                {[
+                  { value: 'yes', label: 'Yes, generate a caption' },
+                  { value: 'no', label: 'No caption needed' }
+                ].map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setFormData(prev => ({ ...prev, captionPreference: value }))}
+                    className={`option-card glass px-4 py-2 rounded-lg transition-colors ${
+                      formData.captionPreference === value ? "selected border-primary bg-primary/10" : ""
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {formData.captionPreference === 'yes' && (
+              <div>
+                <label className="block text-sm font-medium mb-3">Caption style preferences:</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {['emojis', 'engaging', 'professional', 'funny', 'inspirational', 'casual'].map((style) => (
+                    <button
+                      key={style}
+                      onClick={() => handleStyleToggle(style)}
+                      className={`style-card glass px-3 py-2 rounded-lg text-sm transition-colors ${
+                        formData.styles.includes(style) ? "selected border-primary bg-primary/10" : ""
+                      }`}
+                    >
+                      {style.charAt(0).toUpperCase() + style.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-4">
+            <Button
+              onClick={() => setCurrentStep(1)}
+              variant="outline"
+              className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleGenerate}
+              disabled={generateMutation.isPending}
+              className="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            >
+              {generateMutation.isPending ? "Generating..." : "Generate Content"}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 3: Generated Content */}
+      {currentStep === 3 && generatedContent && (
+        <div className="space-y-6">
+          {/* Generated Caption */}
+          {formData.captionPreference === 'yes' && (
+            <div className="glass-card rounded-2xl p-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">Generated Caption</h3>
+                <Button
+                  onClick={regenerate}
+                  disabled={generateMutation.isPending}
+                  variant="ghost"
+                  className="text-primary hover:text-purple-400 transition-colors"
+                >
+                  <RefreshCw className="mr-2" size={16} />
+                  Regenerate
+                </Button>
+              </div>
+              <div className="bg-gray-900/50 rounded-xl p-4 mb-4">
+                <p className="leading-relaxed whitespace-pre-line">
+                  {generatedContent.caption}
+                </p>
+              </div>
+              <Button
+                onClick={() => copyToClipboard(generatedContent.caption)}
+                variant="ghost"
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                <Copy className="mr-2" size={16} />
+                Copy Caption
+              </Button>
+            </div>
+          )}
+
+          {/* Generated Hashtags */}
+          {formData.contentType !== 'story' && generatedContent.hashtags?.length > 0 && (
+            <div className="glass-card rounded-2xl p-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">Suggested Hashtags</h3>
+                <span className="text-sm text-gray-400">{generatedContent.hashtags.length} hashtags</span>
+              </div>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {generatedContent.hashtags.map((hashtag, index) => (
+                  <span
+                    key={index}
+                    onClick={() => copyToClipboard(hashtag)}
+                    className="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors"
+                  >
+                    {hashtag}
+                  </span>
+                ))}
+              </div>
+              <Button
+                onClick={() => copyToClipboard(generatedContent.hashtags.join(' '))}
+                variant="ghost"
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                <Copy className="mr-2" size={16} />
+                Copy All Hashtags
+              </Button>
+            </div>
+          )}
+
+          <div className="flex gap-4">
+            <Button
+              onClick={resetForm}
+              variant="outline"
+              className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+            >
+              Create New Content
+            </Button>
+            <Button className="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+              Save Content
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

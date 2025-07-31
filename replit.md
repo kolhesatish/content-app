@@ -2,7 +2,7 @@
 
 ## Overview
 
-ContentCraft is a full-stack web application that generates AI-powered social media content for Instagram and LinkedIn. The application features a modern React frontend with shadcn/ui components and an Express.js backend with PostgreSQL database integration using Drizzle ORM.
+ContentCraft is a full-stack web application that generates AI-powered social media content for Instagram and LinkedIn. The application has been converted from React + Vite + TypeScript to Next.js with JavaScript. It features a modern Next.js frontend with shadcn/ui components and Next.js API routes for content generation.
 
 ## User Preferences
 
@@ -11,19 +11,19 @@ Preferred communication style: Simple, everyday language.
 ## System Architecture
 
 ### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Routing**: Wouter for client-side routing
-- **UI Library**: shadcn/ui components built on Radix UI primitives
+- **Framework**: Next.js 15 with JavaScript
+- **Routing**: Next.js App Router with file-based routing
+- **UI Library**: shadcn/ui components built on Radix UI primitives (converted to JS)
 - **Styling**: Tailwind CSS with custom design system
-- **State Management**: TanStack Query (React Query) for server state
-- **Build Tool**: Vite with React plugin
+- **State Management**: TanStack Query (React Query) for client state
+- **Build Tool**: Next.js built-in bundler
 
 ### Backend Architecture
-- **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon Database (@neondatabase/serverless)
-- **Schema**: Drizzle schema definitions with Zod validation
-- **Storage**: In-memory storage implementation with interface for database migration
+- **Framework**: Next.js API Routes with JavaScript
+- **API**: RESTful endpoints using Next.js route handlers
+- **Content Generation**: Mock AI content generation functions
+- **Database**: Ready for PostgreSQL integration with Drizzle ORM
+- **Schema**: Available for future database integration
 
 ### Design System
 - **Theme**: Dark theme with purple/blue gradient accents
@@ -41,15 +41,14 @@ Preferred communication style: Simple, everyday language.
 
 ### API Endpoints
 - **Content Generation**: 
-  - `/api/content/instagram` - Generates Instagram posts, reels, and stories
-  - `/api/content/linkedin` - Generates LinkedIn professional content
-- **User Management**: User creation and retrieval endpoints
+  - `/api/content/instagram` - Next.js API route for Instagram posts, reels, and stories
+  - `/api/content/linkedin` - Next.js API route for LinkedIn professional content
 
 ### Frontend Pages
-- **Home**: Landing page with hero section, features, and testimonials
-- **Instagram Generator**: Multi-step form for Instagram content creation
-- **LinkedIn Generator**: Form for professional LinkedIn content
-- **Navigation**: Fixed navigation with glass morphism effect
+- **Home** (`/`): Landing page with hero section, features, and testimonials
+- **Instagram Generator** (`/instagram`): Multi-step form for Instagram content creation
+- **LinkedIn Generator** (`/linkedin`): Form for professional LinkedIn content
+- **Navigation**: Fixed navigation with glass morphism effect across all pages
 
 ### Content Generation Features
 - **Instagram**: Supports posts, reels, and stories with customizable styles
@@ -87,24 +86,35 @@ Preferred communication style: Simple, everyday language.
 ## Deployment Strategy
 
 ### Build Process
-- **Frontend**: Vite builds React app to `dist/public`
-- **Backend**: esbuild bundles Express server to `dist/index.js`
-- **Database**: Drizzle migrations in `migrations/` directory
+- **Frontend**: Next.js builds the entire application with SSR/SSG capabilities
+- **API Routes**: Next.js API routes handle server-side logic
+- **Static Assets**: Next.js optimizes images and static files automatically
 
 ### Environment Configuration
-- **Development**: Uses tsx for hot reloading, Vite dev server
-- **Production**: Compiled JavaScript with Node.js execution
-- **Database**: Requires `DATABASE_URL` environment variable
+- **Development**: Next.js dev server with hot reloading
+- **Production**: Next.js production build with optimizations
+- **Database**: Ready for `DATABASE_URL` environment variable integration
 
 ### File Structure
-- **Client**: All frontend code in `client/` directory
-- **Server**: Backend code in `server/` directory  
-- **Shared**: Common schemas and types in `shared/` directory
-- **Configuration**: Root-level config files for tools and build
+- **App Directory**: Next.js App Router structure in `src/app/`
+- **Components**: Reusable UI components in `src/components/`
+- **API Routes**: Server-side logic in `src/app/api/`
+- **Shared**: Common utilities and configurations in `src/lib/`
+- **Configuration**: Root-level Next.js config files
 
 ### Storage Implementation
 - **Current**: In-memory storage for development/demo
 - **Migration Path**: Interface-based design allows easy database integration
 - **Schema**: Drizzle schema ready for PostgreSQL deployment
 
-The application is designed for easy deployment on platforms like Replit, with proper environment variable configuration and database provisioning.
+## Recent Changes (2024)
+
+**Project Conversion to Next.js + JavaScript**
+- ✓ Converted from React + Vite + TypeScript to Next.js + JavaScript
+- ✓ Migrated all components from TypeScript to JavaScript
+- ✓ Converted Express.js API to Next.js API routes
+- ✓ Updated routing from Wouter to Next.js App Router
+- ✓ Preserved all existing functionality and UI design
+- ✓ Maintained dark glassy UI theme and responsive design
+
+The application is designed for easy deployment on platforms like Replit and Vercel, with Next.js providing excellent performance and SEO capabilities.

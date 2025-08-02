@@ -42,14 +42,14 @@ export async function generateWithGemini(prompt) {
 }
 
 export function createInstagramPrompt(topic, contentType, options) {
-  let prompt = `Create engaging Instagram ${contentType} content about "${topic}".`;
+  let prompt = `Generate 5 different variations of Instagram ${contentType} content about "${topic}".`;
   
   if (contentType === 'post') {
-    prompt += ` Include a captivating caption (2-3 sentences), relevant hashtags (8-12), and content suggestions. `;
+    prompt += ` Each variation should include a captivating caption (2-3 sentences), relevant hashtags (8-12), and content style. `;
   } else if (contentType === 'reel') {
-    prompt += ` Include a hook, script outline for 15-30 seconds, call-to-action, and trending hashtags. `;
+    prompt += ` Each variation should include a hook, script outline for 15-30 seconds, call-to-action, and trending hashtags. `;
   } else if (contentType === 'story') {
-    prompt += ` Create engaging story content with text overlay suggestions and interactive elements. Do NOT include hashtags for stories. `;
+    prompt += ` Each variation should include engaging story content with text overlay suggestions. Do NOT include hashtags for stories. `;
   }
 
   if (options?.styles?.includes('emojis')) {
@@ -60,17 +60,36 @@ export function createInstagramPrompt(topic, contentType, options) {
     prompt += ` Make it highly engaging and shareable. `;
   }
 
-  prompt += ` Return the response in JSON format with these keys: "caption", "hashtags" (array, empty for stories), "contentSuggestions" (array). Focus on quality and authenticity.`;
+  prompt += ` Return ONLY valid JSON without any markdown formatting. Use this exact structure:
+{
+  "variations": [
+    {
+      "caption": "Your caption text here",
+      "hashtags": ${contentType === 'story' ? '[]' : '["#hashtag1", "#hashtag2"]'},
+      "style": "describe the style used"
+    }
+  ]
+}`;
 
   return prompt;
 }
 
 export function createLinkedInPrompt(topic, style) {
-  let prompt = `Create professional LinkedIn content about "${topic}" in ${style} style. `;
+  let prompt = `Generate 5 different variations of professional LinkedIn content about "${topic}" in ${style} style. `;
   
-  prompt += `Include a compelling post (2-3 paragraphs), relevant professional hashtags (5-8), and engagement strategies. `;
+  prompt += `Each variation should include a compelling post (2-3 paragraphs), relevant professional hashtags (5-8), and engagement approach. `;
   prompt += `Make it suitable for professional networking and industry discussions. `;
-  prompt += `Return the response in JSON format with keys: "caption", "hashtags" (array), "engagementTips" (array).`;
+  
+  prompt += ` Return ONLY valid JSON without any markdown formatting. Use this exact structure:
+{
+  "variations": [
+    {
+      "caption": "Your professional post content here",
+      "hashtags": ["#professional", "#industry"],
+      "tone": "describe the tone/approach used"
+    }
+  ]
+}`;
 
   return prompt;
 }

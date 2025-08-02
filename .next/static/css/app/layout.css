@@ -633,13 +633,6 @@ video {
     border-color: hsl(250, 84%, 60%);
     background: rgba(99, 102, 241, 0.1);
   }
-.hashtag-tag {
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-.hashtag-tag:hover {
-    background: rgba(99, 102, 241, 0.3);
-  }
 .nav-link {
     transition: color 0.3s ease;
   }
@@ -745,11 +738,17 @@ video {
 .mt-16 {
   margin-top: 4rem;
 }
+.mt-2 {
+  margin-top: 0.5rem;
+}
 .mt-20 {
   margin-top: 5rem;
 }
 .mt-4 {
   margin-top: 1rem;
+}
+.mt-8 {
+  margin-top: 2rem;
 }
 .block {
   display: block;
@@ -987,8 +986,8 @@ video {
 .whitespace-nowrap {
   white-space: nowrap;
 }
-.whitespace-pre-line {
-  white-space: pre-line;
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
 }
 .rounded-2xl {
   border-radius: 1rem;

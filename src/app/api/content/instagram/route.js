@@ -45,15 +45,34 @@ export async function POST(request) {
     
     let content;
     try {
-      // Try to parse as JSON first
-      content = JSON.parse(aiResponse);
-    } catch (parseError) {
-      // If JSON parsing fails, create structured response from text
-      const lines = aiResponse.split('\n').filter(line => line.trim());
+      // Clean the response - remove markdown formatting
+      const cleanResponse = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const parsed = JSON.parse(cleanResponse);
+      
       content = {
-        caption: lines.slice(0, 3).join('\n'),
-        hashtags: contentType === 'story' ? [] : ['#inspiration', '#content', '#social'],
-        contentSuggestions: lines.slice(-2) || ['Engage with your audience', 'Share authentic content']
+        variations: parsed.variations || []
+      };
+      
+      // Ensure we have variations
+      if (!content.variations.length) {
+        throw new Error('No variations generated');
+      }
+    } catch (parseError) {
+      console.error('JSON parsing failed:', parseError, 'Raw response:', aiResponse);
+      // Fallback to creating structured response
+      content = {
+        variations: [
+          {
+            caption: `Amazing content about ${topic}! Let's explore this exciting topic together.`,
+            hashtags: contentType === 'story' ? [] : ['#inspiration', '#content', '#social'],
+            style: 'engaging'
+          },
+          {
+            caption: `Here's my take on ${topic}. What are your thoughts on this?`,
+            hashtags: contentType === 'story' ? [] : ['#discussion', '#thoughts', '#community'],
+            style: 'conversational'
+          }
+        ]
       };
     }
 

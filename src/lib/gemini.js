@@ -42,14 +42,18 @@ export async function generateWithGemini(prompt) {
 }
 
 export function createInstagramPrompt(topic, contentType, options) {
-  let prompt = `Generate 5 different variations of Instagram ${contentType} content about "${topic}".`;
+  const numVariations = options?.variations || 5;
+  let prompt = `Generate ${numVariations} different variations of Instagram ${contentType} content about "${topic}".`;
+  
+  // Add context about what Instagram content is for
+  prompt += ` This content will be used for Instagram ${contentType}s to engage with followers and grow audience. `;
   
   if (contentType === 'post') {
-    prompt += ` Each variation should include a captivating caption (2-3 sentences), relevant hashtags (8-12), and content style. `;
+    prompt += ` Create Instagram post captions that users can copy and paste directly. Each variation should include a captivating caption (2-3 sentences) that encourages engagement, relevant hashtags (8-12) for better reach, and a specific content style approach. Make the captions ready to use for Instagram posts. `;
   } else if (contentType === 'reel') {
-    prompt += ` Each variation should include a hook, script outline for 15-30 seconds, call-to-action, and trending hashtags. `;
+    prompt += ` Create Instagram reel content that users can use to create engaging videos. Each variation should include an attention-grabbing hook for the first 3 seconds, a detailed script outline for 15-30 seconds of video content, a clear call-to-action to boost engagement, and trending hashtags for maximum reach. `;
   } else if (contentType === 'story') {
-    prompt += ` Each variation should include engaging story content with text overlay suggestions. Do NOT include hashtags for stories. `;
+    prompt += ` Create Instagram story content that users can use for their 24-hour stories. Each variation should include engaging story text that works well as overlay text, interactive elements suggestions, and creative ideas. Do NOT include hashtags for stories as they're not commonly used. `;
   }
 
   if (options?.styles?.includes('emojis')) {
@@ -74,11 +78,15 @@ export function createInstagramPrompt(topic, contentType, options) {
   return prompt;
 }
 
-export function createLinkedInPrompt(topic, style) {
-  let prompt = `Generate 5 different variations of professional LinkedIn content about "${topic}" in ${style} style. `;
+export function createLinkedInPrompt(topic, style, options) {
+  const numVariations = options?.variations || 5;
+  let prompt = `Generate ${numVariations} different variations of professional LinkedIn content about "${topic}" in ${style} style. `;
   
-  prompt += `Each variation should include a compelling post (2-3 paragraphs), relevant professional hashtags (5-8), and engagement approach. `;
-  prompt += `Make it suitable for professional networking and industry discussions. `;
+  // Add context about what LinkedIn content is for
+  prompt += ` This content will be used for LinkedIn posts to build professional network and establish thought leadership. `;
+  
+  prompt += `Create LinkedIn posts that users can copy and paste to build their professional presence. Each variation should include a compelling post (2-3 paragraphs) that establishes thought leadership, relevant professional hashtags (5-8) for networking reach, and an engagement approach that encourages meaningful discussions. `;
+  prompt += `Make the content suitable for professional networking, career development, and industry discussions. The posts should help users build their personal brand and connect with their professional network. `;
   
   prompt += ` Return ONLY valid JSON without any markdown formatting. Use this exact structure:
 {

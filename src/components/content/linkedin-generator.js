@@ -15,7 +15,8 @@ export default function LinkedInGenerator() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     topic: '',
-    style: 'professional'
+    style: 'professional',
+    variations: 5
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -52,6 +53,7 @@ export default function LinkedInGenerator() {
       toast({
         title: 'Content Generated!',
         description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} LinkedIn content variations. Credits remaining: ${data.creditsRemaining}`,
+        duration: 3000,
       })
     },
     onError: (error) => {
@@ -63,6 +65,7 @@ export default function LinkedInGenerator() {
         title: 'Error',
         description: error.message || 'Failed to generate content. Please try again.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   })
@@ -78,6 +81,7 @@ export default function LinkedInGenerator() {
         title: 'Error',
         description: 'Please enter a topic for your LinkedIn post.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -87,13 +91,15 @@ export default function LinkedInGenerator() {
         title: 'No Credits',
         description: 'You need credits to generate content. You get 2 free credits daily!',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
 
     generateMutation.mutate({
       topic: formData.topic,
-      style: formData.style
+      style: formData.style,
+      variations: formData.variations
     })
   }
 
@@ -103,18 +109,20 @@ export default function LinkedInGenerator() {
       toast({
         title: 'Copied!',
         description: 'Content copied to clipboard.',
+        duration: 3000,
       })
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to copy content.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   }
 
   const resetForm = () => {
-    setFormData({ topic: '', style: 'professional' })
+    setFormData({ topic: '', style: 'professional', variations: 5 })
     setGeneratedContent(null)
   }
 
@@ -161,6 +169,26 @@ export default function LinkedInGenerator() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-3">Number of content variations</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => setFormData(prev => ({ ...prev, variations: num }))}
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                    formData.variations === num 
+                      ? "bg-primary text-white" 
+                      : "glass hover:bg-gray-700"
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">Choose how many different content options you want to generate</p>
           </div>
         </div>
 

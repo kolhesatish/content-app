@@ -18,7 +18,8 @@ export default function InstagramGenerator() {
     contentType: 'post',
     topic: '',
     captionPreference: 'yes',
-    styles: []
+    styles: [],
+    variations: 5
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -56,6 +57,7 @@ export default function InstagramGenerator() {
       toast({
         title: 'Content Generated!',
         description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} ${formData.contentType} variations. Credits remaining: ${data.creditsRemaining}`,
+        duration: 3000,
       })
     },
     onError: (error) => {
@@ -67,6 +69,7 @@ export default function InstagramGenerator() {
         title: 'Error',
         description: error.message || 'Failed to generate content. Please try again.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   })
@@ -95,6 +98,7 @@ export default function InstagramGenerator() {
         title: 'Error',
         description: 'Please enter a topic for your content.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -104,6 +108,7 @@ export default function InstagramGenerator() {
         title: 'No Credits',
         description: 'You need credits to generate content. You get 2 free credits daily!',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -111,6 +116,7 @@ export default function InstagramGenerator() {
     generateMutation.mutate({
       topic: formData.topic,
       contentType: formData.contentType,
+      variations: formData.variations,
       options: {
         captionPreference: formData.captionPreference,
         styles: formData.styles
@@ -124,12 +130,14 @@ export default function InstagramGenerator() {
       toast({
         title: 'Copied!',
         description: 'Content copied to clipboard.',
+        duration: 3000,
       })
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to copy content.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   }
@@ -140,7 +148,8 @@ export default function InstagramGenerator() {
       contentType: 'post',
       topic: '',
       captionPreference: 'yes',
-      styles: []
+      styles: [],
+      variations: 5
     })
     setGeneratedContent(null)
   }
@@ -266,6 +275,26 @@ export default function InstagramGenerator() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-3">Number of content variations</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => setFormData(prev => ({ ...prev, variations: num }))}
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                    formData.variations === num 
+                      ? "bg-primary text-white" 
+                      : "glass hover:bg-gray-700"
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">Choose how many different content options you want to generate</p>
           </div>
 
           <div className="flex gap-4">

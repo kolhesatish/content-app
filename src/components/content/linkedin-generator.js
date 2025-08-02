@@ -6,9 +6,13 @@ import { Copy, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
+import { useAuth } from '@/hooks/use-auth'
+import { AuthModal } from '@/components/auth/auth-modal'
 
 export default function LinkedInGenerator() {
   const { toast } = useToast()
+  const { user, getToken, updateCredits } = useAuth()
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     topic: '',
     style: 'professional'
@@ -17,37 +21,70 @@ export default function LinkedInGenerator() {
 
   const generateMutation = useMutation({
     mutationFn: async (data) => {
+      const token = getToken()
+      if (!token) {
+        throw new Error('Authentication required')
+      }
+
       const response = await fetch('/api/content/linkedin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       })
       
+      const result = await response.json()
+      
       if (!response.ok) {
-        throw new Error('Failed to generate content')
+        throw new Error(result.error || 'Failed to generate content')
       }
       
-      return response.json()
+      return result
     },
     onSuccess: (data) => {
       setGeneratedContent(data)
+      if (data.creditsRemaining !== undefined) {
+        updateCredits(data.creditsRemaining)
+      }
+      toast({
+        title: 'Content Generated!',
+        description: `Successfully created LinkedIn content. Credits remaining: ${data.creditsRemaining}`,
+      })
     },
     onError: (error) => {
+      if (error.message === 'Authentication required') {
+        setIsAuthModalOpen(true)
+        return
+      }
       toast({
         title: 'Error',
-        description: 'Failed to generate content. Please try again.',
+        description: error.message || 'Failed to generate content. Please try again.',
         variant: 'destructive',
       })
     }
   })
 
   const handleGenerate = () => {
+    if (!user) {
+      setIsAuthModalOpen(true)
+      return
+    }
+
     if (!formData.topic.trim()) {
       toast({
         title: 'Error',
         description: 'Please enter a topic for your LinkedIn post.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    if (user.credits <= 0) {
+      toast({
+        title: 'No Credits',
+        description: 'You need credits to generate content. You get 2 free credits daily!',
         variant: 'destructive',
       })
       return
@@ -215,6 +252,12 @@ export default function LinkedInGenerator() {
           </div>
         </div>
       )}
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => setIsAuthModalOpen(false)}
+      />
     </div>
   )
 }

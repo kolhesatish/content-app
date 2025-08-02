@@ -23,7 +23,7 @@ export default function Navigation() {
 
   const handleAuthSuccess = (userData) => {
     setIsAuthModalOpen(false)
-    login(userData) // Make sure to call the login method from useAuth
+    // Auth context will automatically update the user state
   }
 
   return (

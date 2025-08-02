@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { ObjectId } from 'mongodb';
 import clientPromise from './mongodb.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -20,6 +21,7 @@ export function verifyToken(token) {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
+    console.error('Token verification error:', error.message);
     return null;
   }
 }
@@ -32,8 +34,17 @@ export async function getUserFromToken(token) {
 
   const client = await clientPromise;
   const db = client.db('contentcraft');
-  const user = await db.collection('users').findOne({ _id: decoded.userId });
   
+  // Convert string ID to ObjectId for MongoDB query
+  let userId;
+  try {
+    userId = new ObjectId(decoded.userId);
+  } catch (error) {
+    console.error('Invalid ObjectId format:', decoded.userId);
+    return null;
+  }
+  
+  const user = await db.collection('users').findOne({ _id: userId });
   return user;
 }
 
@@ -42,7 +53,10 @@ export async function updateUserCredits(userId) {
   const db = client.db('contentcraft');
   
   const now = new Date();
-  const user = await db.collection('users').findOne({ _id: userId });
+  
+  // Ensure userId is ObjectId
+  const userObjectId = typeof userId === 'string' ? new ObjectId(userId) : userId;
+  const user = await db.collection('users').findOne({ _id: userObjectId });
   
   if (!user) return null;
 
@@ -57,7 +71,7 @@ export async function updateUserCredits(userId) {
     newCredits = Math.min(newCredits + 2, 5);
     
     await db.collection('users').updateOne(
-      { _id: userId },
+      { _id: userObjectId },
       { 
         $set: { 
           credits: newCredits, 
@@ -74,17 +88,20 @@ export async function useCredit(userId) {
   const client = await clientPromise;
   const db = client.db('contentcraft');
   
-  // First update daily credits
-  await updateUserCredits(userId);
+  // Ensure userId is ObjectId
+  const userObjectId = typeof userId === 'string' ? new ObjectId(userId) : userId;
   
-  const user = await db.collection('users').findOne({ _id: userId });
+  // First update daily credits
+  await updateUserCredits(userObjectId);
+  
+  const user = await db.collection('users').findOne({ _id: userObjectId });
   
   if (!user || user.credits <= 0) {
     return false;
   }
 
   await db.collection('users').updateOne(
-    { _id: userId },
+    { _id: userObjectId },
     { $inc: { credits: -1 } }
   );
 

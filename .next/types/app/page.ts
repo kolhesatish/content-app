@@ -1,4 +1,4 @@
-// File: C:\Users\SATISH KOLHE\Downloads\SocialSpark (2)\SocialSpark\src\app\page.js
+// File: /home/runner/workspace/src/app/page.js
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

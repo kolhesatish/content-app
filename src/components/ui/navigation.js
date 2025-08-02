@@ -56,11 +56,11 @@ export default function Navigation() {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <Coins className="w-4 h-4" />
-                    <span>{user.credits} credits</span>
+                    <span>{user.credits || 0} credits</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
-                    <span>{user.username}</span>
+                    <span>{user.username || 'User'}</span>
                   </div>
                   <Button
                     variant="outline"

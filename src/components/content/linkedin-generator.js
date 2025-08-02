@@ -67,7 +67,9 @@ export default function LinkedInGenerator() {
   })
 
   const handleGenerate = () => {
+    console.log('🎯 Generate clicked, user:', user)
     if (!user) {
+      console.log('❌ No user, showing auth modal')
       setIsAuthModalOpen(true)
       return
     }

@@ -19,13 +19,19 @@ export function AuthProvider({ children }) {
       return
     }
 
+    console.log('🔄 Initializing auth...')
+
     // First, restore user from localStorage immediately for fast UI update
     const storedUser = localStorage.getItem('user')
     const token = localStorage.getItem('token')
     
+    console.log('📦 Stored user:', storedUser ? 'Found' : 'Not found')
+    console.log('🔑 Token:', token ? 'Found' : 'Not found')
+    
     if (storedUser && token) {
       try {
         const userData = JSON.parse(storedUser)
+        console.log('✅ Setting user:', userData)
         setUser(userData)
         
         // Verify token is still valid in background
@@ -62,6 +68,7 @@ export function AuthProvider({ children }) {
   }
 
   const login = (userData, token) => {
+    console.log('🚀 Login called with:', userData, token ? 'with token' : 'no token')
     setUser(userData)
     if (typeof window !== 'undefined') {
       localStorage.setItem('user', JSON.stringify(userData))

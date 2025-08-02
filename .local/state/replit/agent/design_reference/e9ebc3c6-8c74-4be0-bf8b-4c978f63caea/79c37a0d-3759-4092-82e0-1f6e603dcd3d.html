@@ -1,0 +1,870 @@
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContentCraft - AI-Powered Social Media Content Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    'inter': ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    primary: '#6366F1',
+                    purple: '#8B5CF6',
+                    emerald: '#10B981',
+                    amber: '#F59E0B',
+                },
+                backdropBlur: {
+                    xs: '2px',
+                }
+            }
+        }
+    };
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-magic text-primary text-2xl"></i>
+                    <span class="text-xl font-bold gradient-text">ContentCraft</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="#instagram" class="nav-link text-gray-300 hover:text-white transition-colors">Instagram</a>
+                    <a href="#linkedin" class="nav-link text-gray-300 hover:text-white transition-colors">LinkedIn</a>
+                    <button class="gradient-bg px-4 py-2 rounded-lg text-white font-medium hover:opacity-90 transition-opacity">
+                        Get Started
+                    </button>
+                </div>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="home" class="page-section">
+        <!-- Hero Section -->
+        <section class="pt-32 pb-20 px-4 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-purple/20 pointer-events-none"></div>
+            <div class="max-w-6xl mx-auto text-center relative">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Create Viral Content with 
+                    <span class="gradient-text">AI Magic</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Generate engaging Instagram posts, LinkedIn content, and social media captions in seconds. 
+                    Powered by advanced AI to boost your social presence.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="gradient-bg px-8 py-4 rounded-xl text-white font-semibold text-lg hover:scale-105 transition-transform">
+                        Start Creating Now
+                    </button>
+                    <button class="glass px-8 py-4 rounded-xl text-white font-semibold text-lg hover:scale-105 transition-transform">
+                        <i class="fas fa-play mr-2"></i>
+                        Watch Demo
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text">10K+</div>
+                        <div class="text-gray-400">Content Created</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text">500+</div>
+                        <div class="text-gray-400">Happy Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold gradient-text">99%</div>
+                        <div class="text-gray-400">Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tool Section -->
+        <section class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Choose Your Platform</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                        Select the social media platform you want to create content for and let our AI do the magic.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Instagram Tool Card -->
+                    <div class="glass-card rounded-2xl p-8 hover:scale-105 transition-transform cursor-pointer group" onclick="showInstagramPage()">
+                        <div class="text-center">
+                            <div class="w-20 h-20 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                                <i class="fab fa-instagram text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">Instagram Content Generator</h3>
+                            <p class="text-gray-300 mb-6 leading-relaxed">
+                                Create engaging posts, reels, and stories with AI-powered captions, hashtags, and creative ideas.
+                            </p>
+                            <div class="space-y-2 mb-8">
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    Posts, Reels & Stories
+                                </div>
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    AI-Generated Captions
+                                </div>
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    Trending Hashtags
+                                </div>
+                            </div>
+                            <button class="w-full gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Generate Instagram Content
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- LinkedIn Tool Card -->
+                    <div class="glass-card rounded-2xl p-8 hover:scale-105 transition-transform cursor-pointer group" onclick="showLinkedInPage()">
+                        <div class="text-center">
+                            <div class="w-20 h-20 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                                <i class="fab fa-linkedin text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold mb-4">LinkedIn Content Generator</h3>
+                            <p class="text-gray-300 mb-6 leading-relaxed">
+                                Craft professional LinkedIn posts that engage your network and boost your personal brand.
+                            </p>
+                            <div class="space-y-2 mb-8">
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    Professional Posts
+                                </div>
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    Industry Insights
+                                </div>
+                                <div class="flex items-center text-sm text-gray-400">
+                                    <i class="fas fa-check-circle text-emerald mr-2"></i>
+                                    Relevant Hashtags
+                                </div>
+                            </div>
+                            <button class="w-full gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Generate LinkedIn Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Why Choose ContentCraft?</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                        Our AI-powered platform makes content creation effortless and effective.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bolt text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Lightning Fast</h3>
+                        <p class="text-gray-300">Generate high-quality content in seconds, not hours.</p>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-brain text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">AI-Powered</h3>
+                        <p class="text-gray-300">Advanced algorithms ensure engaging and relevant content.</p>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="w-16 h-16 gradient-bg rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Results Driven</h3>
+                        <p class="text-gray-300">Optimize for engagement and reach on every platform.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Instagram Page -->
+    <div id="instagram" class="page-section hidden">
+        <!-- Hero Section -->
+        <section class="pt-32 pb-16 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="w-24 h-24 gradient-bg rounded-3xl flex items-center justify-center mx-auto mb-8">
+                    <i class="fab fa-instagram text-4xl text-white"></i>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    Instagram Content <span class="gradient-text">Generator</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Create viral Instagram content with AI-powered captions, hashtags, and creative ideas tailored for maximum engagement.
+                </p>
+            </div>
+        </section>
+
+        <!-- Content Generation Tool -->
+        <section class="pb-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Progress Steps -->
+                <div class="flex justify-center mb-12">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold step-indicator" data-step="1">1</div>
+                            <span class="ml-2 text-sm font-medium">Content Type</span>
+                        </div>
+                        <div class="w-8 h-0.5 bg-gray-600"></div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 font-semibold step-indicator" data-step="2">2</div>
+                            <span class="ml-2 text-sm font-medium text-gray-400">Options</span>
+                        </div>
+                        <div class="w-8 h-0.5 bg-gray-600"></div>
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 font-semibold step-indicator" data-step="3">3</div>
+                            <span class="ml-2 text-sm font-medium text-gray-400">Generate</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Content Type Selection -->
+                <div id="step1" class="step-content">
+                    <div class="glass-card rounded-2xl p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-center">What type of content do you want to create?</h2>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="content-type-card glass p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform" data-type="post">
+                                <div class="text-center">
+                                    <i class="fas fa-image text-3xl text-primary mb-4"></i>
+                                    <h3 class="text-lg font-semibold mb-2">Post</h3>
+                                    <p class="text-sm text-gray-400">Static image posts with captions</p>
+                                </div>
+                            </div>
+                            
+                            <div class="content-type-card glass p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform" data-type="reel">
+                                <div class="text-center">
+                                    <i class="fas fa-video text-3xl text-primary mb-4"></i>
+                                    <h3 class="text-lg font-semibold mb-2">Reel</h3>
+                                    <p class="text-sm text-gray-400">Short-form video content</p>
+                                </div>
+                            </div>
+                            
+                            <div class="content-type-card glass p-6 rounded-xl cursor-pointer hover:scale-105 transition-transform" data-type="story">
+                                <div class="text-center">
+                                    <i class="fas fa-bolt text-3xl text-primary mb-4"></i>
+                                    <h3 class="text-lg font-semibold mb-2">Story</h3>
+                                    <p class="text-sm text-gray-400">24-hour disappearing content</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-3">What's your topic or idea?</label>
+                            <textarea 
+                                id="instagram-topic" 
+                                class="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:border-primary focus:outline-none resize-none" 
+                                rows="3" 
+                                placeholder="e.g., Tips for morning productivity, Behind the scenes of my workspace, Recipe for healthy smoothie...">
+                            </textarea>
+                        </div>
+
+                        <button onclick="goToStep(2)" class="w-full gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            Continue to Options
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Content Options -->
+                <div id="step2" class="step-content hidden">
+                    <div class="glass-card rounded-2xl p-8">
+                        <h2 class="text-2xl font-bold mb-6 text-center">Customize your content</h2>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div>
+                                <label class="block text-sm font-medium mb-3">Do you want a caption?</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="caption" value="yes" class="sr-only">
+                                        <div class="option-card glass px-4 py-2 rounded-lg">Yes, generate a caption</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="caption" value="no" class="sr-only">
+                                        <div class="option-card glass px-4 py-2 rounded-lg">No caption needed</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="caption-options" class="hidden">
+                                <label class="block text-sm font-medium mb-3">Caption style preferences:</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="emojis" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Include Emojis</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="engaging" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Engaging Tone</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="professional" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Professional</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="funny" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Funny</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="inspirational" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Inspirational</div>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="checkbox" name="style" value="casual" class="sr-only">
+                                        <div class="style-card glass px-3 py-2 rounded-lg text-sm">Casual</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button onclick="goToStep(1)" class="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Back
+                            </button>
+                            <button onclick="goToStep(3)" class="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Generate Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Generated Content -->
+                <div id="step3" class="step-content hidden">
+                    <div class="space-y-6">
+                        <!-- Generated Caption -->
+                        <div class="glass-card rounded-2xl p-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold">Generated Caption</h3>
+                                <button class="text-primary hover:text-purple transition-colors" onclick="regenerateContent()">
+                                    <i class="fas fa-sync-alt mr-2"></i>Regenerate
+                                </button>
+                            </div>
+                            <div id="generated-caption" class="bg-gray-900/50 rounded-xl p-4 mb-4">
+                                <p class="leading-relaxed" data-mock="true">
+                                    Ready to transform your mornings? ✨ Here are 5 game-changing productivity tips that helped me reclaim my day! 
+                                    
+                                    1️⃣ Wake up 30 minutes earlier
+                                    2️⃣ Start with hydration 💧
+                                    3️⃣ Write down 3 priorities 
+                                    4️⃣ Move your body for 10 minutes
+                                    5️⃣ Avoid phone for the first hour
+                                    
+                                    Which one resonates with you the most? Let me know in the comments! 👇
+                                </p>
+                            </div>
+                            <button class="text-sm text-gray-400 hover:text-white transition-colors">
+                                <i class="fas fa-copy mr-2"></i>Copy Caption
+                            </button>
+                        </div>
+
+                        <!-- Generated Hashtags -->
+                        <div id="hashtags-section" class="glass-card rounded-2xl p-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold">Suggested Hashtags</h3>
+                                <span class="text-sm text-gray-400">30 hashtags</span>
+                            </div>
+                            <div id="generated-hashtags" class="flex flex-wrap gap-2">
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#productivity</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#morningroutine</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#mindset</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#motivation</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#selfcare</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#wellness</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#goals</span>
+                                <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#success</span>
+                            </div>
+                            <button class="text-sm text-gray-400 hover:text-white transition-colors mt-4">
+                                <i class="fas fa-copy mr-2"></i>Copy All Hashtags
+                            </button>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button onclick="goToStep(1)" class="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Create New Content
+                            </button>
+                            <button class="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                                Save Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- LinkedIn Page -->
+    <div id="linkedin" class="page-section hidden">
+        <!-- Hero Section -->
+        <section class="pt-32 pb-16 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="w-24 h-24 gradient-bg rounded-3xl flex items-center justify-center mx-auto mb-8">
+                    <i class="fab fa-linkedin text-4xl text-white"></i>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    LinkedIn Content <span class="gradient-text">Generator</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Create professional LinkedIn posts that engage your network and establish thought leadership in your industry.
+                </p>
+            </div>
+        </section>
+
+        <!-- Content Generation Tool -->
+        <section class="pb-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="glass-card rounded-2xl p-8 mb-8">
+                    <h2 class="text-2xl font-bold mb-6">What would you like to post about?</h2>
+                    
+                    <div class="space-y-6 mb-8">
+                        <div>
+                            <label class="block text-sm font-medium mb-3">Topic or idea for your LinkedIn post</label>
+                            <textarea 
+                                id="linkedin-topic" 
+                                class="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:border-primary focus:outline-none resize-none" 
+                                rows="4" 
+                                placeholder="e.g., Lessons learned from a failed project, Industry trends in 2024, Team management insights, Career advice...">
+                            </textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-3">Post style (optional)</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="linkedin-style" value="professional" class="sr-only">
+                                    <div class="style-card glass px-3 py-2 rounded-lg text-sm text-center">Professional</div>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="linkedin-style" value="story" class="sr-only">
+                                    <div class="style-card glass px-3 py-2 rounded-lg text-sm text-center">Story-driven</div>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="linkedin-style" value="insights" class="sr-only">
+                                    <div class="style-card glass px-3 py-2 rounded-lg text-sm text-center">Insights</div>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="linkedin-style" value="question" class="sr-only">
+                                    <div class="style-card glass px-3 py-2 rounded-lg text-sm text-center">Question</div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="generateLinkedInContent()" class="w-full gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                        <span class="generate-text">Generate LinkedIn Post</span>
+                        <span class="loading-text hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>Generating...
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Generated Content -->
+                <div id="linkedin-results" class="space-y-6 hidden">
+                    <!-- Generated Post -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Generated LinkedIn Post</h3>
+                            <button class="text-primary hover:text-purple transition-colors" onclick="regenerateLinkedInContent()">
+                                <i class="fas fa-sync-alt mr-2"></i>Regenerate
+                            </button>
+                        </div>
+                        <div id="generated-linkedin-post" class="bg-gray-900/50 rounded-xl p-6 mb-4">
+                            <p class="leading-relaxed whitespace-pre-line" data-mock="true">Last month, our biggest project failed spectacularly. 
+
+And it was the best thing that happened to our team.
+
+Here's what we learned from our $50K mistake:
+
+🔍 Assumption is the enemy of innovation
+We assumed we knew what our users wanted without asking them directly. Big mistake. The feature we spent 3 months building? Used by less than 2% of our beta testers.
+
+🗣️ Communication beats perfection
+Instead of waiting for the "perfect" solution, we should have shared our progress weekly. The feedback we got too late could have saved us months of work.
+
+💡 Failure is data, not defeat
+Every failed attempt taught us something valuable about our users, our process, and ourselves. We now have a failure board where we celebrate what we learned from each setback.
+
+🔄 Iteration over perfection
+We switched from quarterly big releases to bi-weekly small ones. Our success rate improved by 300% and user satisfaction went through the roof.
+
+The project failed, but we succeeded in learning how to build better products.
+
+What's the most valuable lesson you've learned from a professional failure?</p>
+                        </div>
+                        <button class="text-sm text-gray-400 hover:text-white transition-colors">
+                            <i class="fas fa-copy mr-2"></i>Copy Post
+                        </button>
+                    </div>
+
+                    <!-- Generated Hashtags -->
+                    <div class="glass-card rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Suggested Hashtags</h3>
+                            <span class="text-sm text-gray-400">10 hashtags</span>
+                        </div>
+                        <div id="generated-linkedin-hashtags" class="flex flex-wrap gap-2">
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Leadership</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Entrepreneurship</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#ProjectManagement</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Innovation</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Teamwork</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#ProductDevelopment</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#LessonsLearned</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Failure</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#Growth</span>
+                            <span class="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm" data-mock="true">#ProfessionalDevelopment</span>
+                        </div>
+                        <button class="text-sm text-gray-400 hover:text-white transition-colors mt-4">
+                            <i class="fas fa-copy mr-2"></i>Copy All Hashtags
+                        </button>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="resetLinkedInForm()" class="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            Create New Post
+                        </button>
+                        <button class="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
+                            Save Content
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 border-t border-gray-800 py-12 px-4 mt-20">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-magic text-primary text-xl"></i>
+                        <span class="text-lg font-bold gradient-text">ContentCraft</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        AI-powered content generation for social media success. Create engaging posts in seconds.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Products</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#instagram" class="hover:text-white transition-colors">Instagram Generator</a></li>
+                        <li><a href="#linkedin" class="hover:text-white transition-colors">LinkedIn Generator</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Twitter Generator</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">TikTok Generator</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-6 text-center text-sm text-gray-400">
+                <p>&copy; 2024 ContentCraft. All rights reserved. Made with ❤️ for creators.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+            
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary');
+                link.classList.add('text-gray-300');
+            });
+            
+            const activeLink = document.querySelector(`[href="#${pageId}"]`);
+            if (activeLink) {
+                activeLink.classList.remove('text-gray-300');
+                activeLink.classList.add('text-primary');
+            }
+        }
+
+        function showInstagramPage() {
+            showPage('instagram');
+            resetInstagramForm();
+        }
+
+        function showLinkedInPage() {
+            showPage('linkedin');
+            resetLinkedInForm();
+        }
+
+        // Instagram Multi-step Form
+        let selectedContentType = '';
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show target step
+            document.getElementById(`step${step}`).classList.remove('hidden');
+            
+            // Update progress indicators
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                const stepNum = index + 1;
+                if (stepNum <= step) {
+                    indicator.classList.remove('bg-gray-600', 'text-gray-400');
+                    indicator.classList.add('bg-primary', 'text-white');
+                    indicator.nextElementSibling.classList.remove('text-gray-400');
+                    indicator.nextElementSibling.classList.add('text-white');
+                } else {
+                    indicator.classList.remove('bg-primary', 'text-white');
+                    indicator.classList.add('bg-gray-600', 'text-gray-400');
+                    indicator.nextElementSibling.classList.remove('text-white');
+                    indicator.nextElementSibling.classList.add('text-gray-400');
+                }
+            });
+
+            // Show/hide hashtags based on content type
+            if (step === 3) {
+                const hashtagsSection = document.getElementById('hashtags-section');
+                if (selectedContentType === 'story') {
+                    hashtagsSection.classList.add('hidden');
+                } else {
+                    hashtagsSection.classList.remove('hidden');
+                }
+                
+                // TODO: Generate actual content based on form inputs
+                // This would integrate with AI content generation API
+            }
+        }
+
+        function resetInstagramForm() {
+            goToStep(1);
+            selectedContentType = '';
+            document.getElementById('instagram-topic').value = '';
+            
+            // Reset selections
+            document.querySelectorAll('.content-type-card').forEach(card => {
+                card.classList.remove('border-primary', 'bg-primary/10');
+            });
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('border-primary', 'bg-primary/10');
+            });
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.classList.remove('border-primary', 'bg-primary/10');
+            });
+        }
+
+        function regenerateContent() {
+            // TODO: Implement content regeneration with AI
+            console.log('Regenerating content...');
+        }
+
+        // LinkedIn Content Generation
+        function generateLinkedInContent() {
+            const topic = document.getElementById('linkedin-topic').value;
+            if (!topic.trim()) {
+                alert('Please enter a topic for your LinkedIn post');
+                return;
+            }
+
+            // Show loading state
+            const button = event.target;
+            button.querySelector('.generate-text').classList.add('hidden');
+            button.querySelector('.loading-text').classList.remove('hidden');
+            button.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                // Hide loading state
+                button.querySelector('.generate-text').classList.remove('hidden');
+                button.querySelector('.loading-text').classList.add('hidden');
+                button.disabled = false;
+
+                // Show results
+                document.getElementById('linkedin-results').classList.remove('hidden');
+                
+                // TODO: Replace with actual AI generation
+                // This would call the content generation API with the topic and style
+            }, 2000);
+        }
+
+        function regenerateLinkedInContent() {
+            // TODO: Implement LinkedIn content regeneration
+            console.log('Regenerating LinkedIn content...');
+        }
+
+        function resetLinkedInForm() {
+            document.getElementById('linkedin-topic').value = '';
+            document.getElementById('linkedin-results').classList.add('hidden');
+            
+            // Reset style selections
+            document.querySelectorAll('input[name="linkedin-style"]').forEach(input => {
+                input.checked = false;
+            });
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.classList.remove('border-primary', 'bg-primary/10');
+            });
+        }
+
+        // Interactive Elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Content type selection
+            document.querySelectorAll('.content-type-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selection from all cards
+                    document.querySelectorAll('.content-type-card').forEach(c => {
+                        c.classList.remove('border-primary', 'bg-primary/10');
+                    });
+                    
+                    // Add selection to clicked card
+                    this.classList.add('border-primary', 'bg-primary/10');
+                    selectedContentType = this.dataset.type;
+                });
+            });
+
+            // Option card selection
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const radio = this.parentElement.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        
+                        // Update visual state
+                        document.querySelectorAll('input[name="' + radio.name + '"]').forEach(r => {
+                            r.parentElement.querySelector('.option-card').classList.remove('border-primary', 'bg-primary/10');
+                        });
+                        this.classList.add('border-primary', 'bg-primary/10');
+                        
+                        // Show caption options if "yes" is selected
+                        if (radio.value === 'yes') {
+                            document.getElementById('caption-options').classList.remove('hidden');
+                        } else {
+                            document.getElementById('caption-options').classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+            // Style card selection (checkbox behavior)
+            document.querySelectorAll('.style-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const checkbox = this.parentElement.querySelector('input[type="checkbox"], input[type="radio"]');
+                    if (checkbox) {
+                        if (checkbox.type === 'checkbox') {
+                            checkbox.checked = !checkbox.checked;
+                            this.classList.toggle('border-primary');
+                            this.classList.toggle('bg-primary/10');
+                        } else if (checkbox.type === 'radio') {
+                            // Radio button behavior
+                            document.querySelectorAll('input[name="' + checkbox.name + '"]').forEach(r => {
+                                r.parentElement.querySelector('.style-card').classList.remove('border-primary', 'bg-primary/10');
+                            });
+                            checkbox.checked = true;
+                            this.classList.add('border-primary', 'bg-primary/10');
+                        }
+                    }
+                });
+            });
+
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('href').substring(1);
+                    showPage(pageId);
+                });
+            });
+
+            // Hashtag click to copy
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hashtag-tag')) {
+                    navigator.clipboard.writeText(e.target.textContent);
+                    // Show feedback
+                    e.target.classList.add('bg-emerald/20', 'text-emerald');
+                    setTimeout(() => {
+                        e.target.classList.remove('bg-emerald/20', 'text-emerald');
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

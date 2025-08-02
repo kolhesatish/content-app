@@ -9,8 +9,25 @@ export function useAuth() {
   }, []);
 
   const checkAuth = async () => {
+    // Check if we're in browser environment
+    if (typeof window === 'undefined') {
+      setIsLoading(false);
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
+      // Check if user data exists in localStorage on page refresh
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+        } catch (error) {
+          console.error('Error parsing stored user data:', error);
+          localStorage.removeItem('user');
+        }
+      }
       setIsLoading(false);
       return;
     }
@@ -42,11 +59,16 @@ export function useAuth() {
 
   const login = (userData) => {
     setUser(userData);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(userData));
+    }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
     setUser(null);
   };
 
@@ -54,11 +76,14 @@ export function useAuth() {
     if (user) {
       const updatedUser = { ...user, credits: newCredits };
       setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
     }
   };
 
   const getToken = () => {
+    if (typeof window === 'undefined') return null;
     return localStorage.getItem('token');
   };
 

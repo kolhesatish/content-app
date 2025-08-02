@@ -47,14 +47,15 @@ export default function InstagramGenerator() {
       return result
     },
     onSuccess: (data) => {
-      setGeneratedContent(data)
+      // Extract the content.variations from the API response
+      setGeneratedContent(data.content)
       setCurrentStep(3)
       if (data.creditsRemaining !== undefined) {
         updateCredits(data.creditsRemaining)
       }
       toast({
         title: 'Content Generated!',
-        description: `Successfully created ${formData.contentType} content. Credits remaining: ${data.creditsRemaining}`,
+        description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} ${formData.contentType} variations. Credits remaining: ${data.creditsRemaining}`,
       })
     },
     onError: (error) => {
@@ -315,20 +316,69 @@ export default function InstagramGenerator() {
                     )}
                   </div>
                   
+                  {/* Caption for Posts/Stories, Hook for Reels */}
                   {formData.captionPreference === 'yes' && (
                     <div>
-                      <label className="text-sm font-medium text-gray-400 mb-2 block">Caption</label>
-                      <div className="bg-gray-900/50 p-4 rounded-lg border">
-                        <p className="whitespace-pre-wrap leading-relaxed">{variation.caption}</p>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">
+                        {formData.contentType === 'reel' ? 'Hook & Caption' : 'Caption'}
+                      </label>
+                      <div className="bg-gray-900/50 p-4 rounded-lg border space-y-2">
+                        {formData.contentType === 'reel' ? (
+                          <>
+                            {variation.hook && (
+                              <div>
+                                <strong className="text-primary">Hook:</strong> {variation.hook}
+                              </div>
+                            )}
+                            {variation.caption && (
+                              <div>
+                                <strong className="text-primary">Caption:</strong> {variation.caption}
+                              </div>
+                            )}
+                            {variation.call_to_action && (
+                              <div>
+                                <strong className="text-primary">Call to Action:</strong> {variation.call_to_action}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <p className="whitespace-pre-wrap leading-relaxed">{variation.caption}</p>
+                        )}
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(variation.caption)}
+                        onClick={() => copyToClipboard(formData.contentType === 'reel' 
+                          ? `${variation.hook || ''}\n\n${variation.caption || ''}\n\n${variation.call_to_action || ''}` 
+                          : variation.caption
+                        )}
                         className="mt-2 text-sm text-gray-400 hover:text-white"
                       >
                         <Copy className="w-4 h-4 mr-2" />
-                        Copy Caption
+                        Copy {formData.contentType === 'reel' ? 'Script' : 'Caption'}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Script Outline for Reels */}
+                  {formData.contentType === 'reel' && variation.script_outline && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">Script Outline</label>
+                      <div className="bg-gray-900/50 p-4 rounded-lg border">
+                        <ol className="list-decimal list-inside space-y-1">
+                          {variation.script_outline.map((step, stepIndex) => (
+                            <li key={stepIndex} className="text-sm leading-relaxed">{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(variation.script_outline.join('\n'))}
+                        className="mt-2 text-sm text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Script
                       </Button>
                     </div>
                   )}
@@ -362,11 +412,25 @@ export default function InstagramGenerator() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard(`${variation.caption}${formData.contentType !== 'story' && variation.hashtags ? '\n\n' + variation.hashtags.join(' ') : ''}`)}
+                    onClick={() => {
+                      let completeContent = '';
+                      if (formData.contentType === 'reel') {
+                        completeContent = `${variation.hook || ''}\n\n${variation.caption || ''}\n\n${variation.call_to_action || ''}`;
+                        if (variation.hashtags && variation.hashtags.length > 0) {
+                          completeContent += '\n\n' + variation.hashtags.join(' ');
+                        }
+                      } else {
+                        completeContent = variation.caption || '';
+                        if (formData.contentType !== 'story' && variation.hashtags && variation.hashtags.length > 0) {
+                          completeContent += '\n\n' + variation.hashtags.join(' ');
+                        }
+                      }
+                      copyToClipboard(completeContent);
+                    }}
                     className="w-full mt-4"
                   >
                     <Copy className="w-4 h-4 mr-2" />
-                    Copy Complete Post
+                    Copy Complete {formData.contentType === 'reel' ? 'Reel Content' : 'Post'}
                   </Button>
                 </div>
               ))}

@@ -44,13 +44,14 @@ export default function LinkedInGenerator() {
       return result
     },
     onSuccess: (data) => {
-      setGeneratedContent(data)
+      // Extract the content.variations from the API response
+      setGeneratedContent(data.content)
       if (data.creditsRemaining !== undefined) {
         updateCredits(data.creditsRemaining)
       }
       toast({
         title: 'Content Generated!',
-        description: `Successfully created LinkedIn content. Credits remaining: ${data.creditsRemaining}`,
+        description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} LinkedIn content variations. Credits remaining: ${data.creditsRemaining}`,
       })
     },
     onError: (error) => {

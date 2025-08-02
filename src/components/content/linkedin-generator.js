@@ -67,10 +67,10 @@ export default function LinkedInGenerator() {
   })
 
   const handleGenerate = () => {
-    // if (!user) {
-    //   setIsAuthModalOpen(true)
-    //   return
-    // }
+    if (!user) {
+      setIsAuthModalOpen(true)
+      return
+    }
 
     if (!formData.topic.trim()) {
       toast({
@@ -81,14 +81,14 @@ export default function LinkedInGenerator() {
       return
     }
 
-    // if (user.credits <= 0) {
-    //   toast({
-    //     title: 'No Credits',
-    //     description: 'You need credits to generate content. You get 2 free credits daily!',
-    //     variant: 'destructive',
-    //   })
-    //   return
-    // }
+    if (user.credits <= 0) {
+      toast({
+        title: 'No Credits',
+        description: 'You need credits to generate content. You get 2 free credits daily!',
+        variant: 'destructive',
+      })
+      return
+    }
 
     generateMutation.mutate({
       topic: formData.topic,
@@ -256,7 +256,10 @@ export default function LinkedInGenerator() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={() => setIsAuthModalOpen(false)}
+        onSuccess={(userData) => {
+          setIsAuthModalOpen(false)
+          // The useAuth hook will automatically update the user state
+        }}
       />
     </div>
   )

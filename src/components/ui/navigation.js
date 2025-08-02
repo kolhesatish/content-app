@@ -12,7 +12,8 @@ export default function Navigation() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout, login } = useAuth()
+
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -22,6 +23,7 @@ export default function Navigation() {
 
   const handleAuthSuccess = (userData) => {
     setIsAuthModalOpen(false)
+    login(userData) // Make sure to call the login method from useAuth
   }
 
   return (

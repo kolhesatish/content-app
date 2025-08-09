@@ -5,13 +5,16 @@ import { useMutation } from '@tanstack/react-query'
 import { Image, Video, Zap, Copy, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { AuthModal } from '@/components/auth/auth-modal'
 
 export default function InstagramGenerator() {
   const { toast } = useToast()
   const { user, getToken, updateCredits } = useAuth()
+  const { t } = useLanguage()
   const [currentStep, setCurrentStep] = useState(1)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [formData, setFormData] = useState({
@@ -19,7 +22,8 @@ export default function InstagramGenerator() {
     topic: '',
     captionPreference: 'yes',
     styles: [],
-    variations: 5
+    variations: 5,
+    wordCount: 100
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -117,6 +121,7 @@ export default function InstagramGenerator() {
       topic: formData.topic,
       contentType: formData.contentType,
       variations: formData.variations,
+      wordCount: formData.wordCount,
       options: {
         captionPreference: formData.captionPreference,
         styles: formData.styles
@@ -149,7 +154,8 @@ export default function InstagramGenerator() {
       topic: '',
       captionPreference: 'yes',
       styles: [],
-      variations: 5
+      variations: 5,
+      wordCount: 100
     })
     setGeneratedContent(null)
   }
@@ -186,13 +192,13 @@ export default function InstagramGenerator() {
       {/* Step 1: Content Type Selection */}
       {currentStep === 1 && (
         <div className="glass-card rounded-2xl p-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">What type of content do you want to create?</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">{t('instagramGenerator.title')}</h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
-              { type: 'post', icon: Image, title: 'Post', description: 'Static image posts with captions' },
-              { type: 'reel', icon: Video, title: 'Reel', description: 'Short-form video content' },
-              { type: 'story', icon: Zap, title: 'Story', description: '24-hour disappearing content' }
+              { type: 'post', icon: Image, title: t('instagramGenerator.post'), description: 'Static image posts with captions' },
+              { type: 'reel', icon: Video, title: t('instagramGenerator.reel'), description: 'Short-form video content' },
+              { type: 'story', icon: Zap, title: t('instagramGenerator.story'), description: '24-hour disappearing content' }
             ].map(({ type, icon: Icon, title, description }) => (
               <div
                 key={type}
@@ -211,13 +217,13 @@ export default function InstagramGenerator() {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-3">What's your topic or idea?</label>
+            <label className="block text-sm font-medium mb-3">{t('instagramGenerator.topic')}</label>
             <Textarea
               value={formData.topic}
               onChange={(e) => setFormData(prev => ({ ...prev, topic: e.target.value }))}
               className="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:border-primary focus:outline-none resize-none"
               rows={3}
-              placeholder="e.g., Tips for morning productivity, Behind the scenes of my workspace, Recipe for healthy smoothie..."
+              placeholder={t('instagramGenerator.topicPlaceholder')}
             />
           </div>
 
@@ -234,15 +240,15 @@ export default function InstagramGenerator() {
       {/* Step 2: Content Options */}
       {currentStep === 2 && (
         <div className="glass-card rounded-2xl p-8">
-          <h2 className="text-2xl font-bold mb-6 text-center">Customize your content</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center">{t('instagramGenerator.title')}</h2>
           
           <div className="space-y-6 mb-8">
             <div>
-              <label className="block text-sm font-medium mb-3">Do you want a caption?</label>
+              <label className="block text-sm font-medium mb-3">{t('instagramGenerator.caption')}</label>
               <div className="flex gap-4">
                 {[
-                  { value: 'yes', label: 'Yes, generate a caption' },
-                  { value: 'no', label: 'No caption needed' }
+                  { value: 'yes', label: t('instagramGenerator.yes') },
+                  { value: 'no', label: t('instagramGenerator.no') }
                 ].map(({ value, label }) => (
                   <button
                     key={value}
@@ -258,22 +264,43 @@ export default function InstagramGenerator() {
             </div>
 
             {formData.captionPreference === 'yes' && (
-              <div>
-                <label className="block text-sm font-medium mb-3">Caption style preferences:</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {['emojis', 'engaging', 'professional', 'funny', 'inspirational', 'casual'].map((style) => (
-                    <button
-                      key={style}
-                      onClick={() => handleStyleToggle(style)}
-                      className={`style-card glass px-3 py-2 rounded-lg text-sm transition-colors ${
-                        formData.styles.includes(style) ? "selected border-primary bg-primary/10" : ""
-                      }`}
-                    >
-                      {style.charAt(0).toUpperCase() + style.slice(1)}
-                    </button>
-                  ))}
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-3">{t('instagramGenerator.wordCount')}:</label>
+                  <Select
+                    value={formData.wordCount.toString()}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, wordCount: parseInt(value) }))}
+                  >
+                    <SelectTrigger className="w-full max-w-xs">
+                      <SelectValue placeholder={t('instagramGenerator.wordCount')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(t('wordCounts')).map(([count, label]) => (
+                        <SelectItem key={count} value={count}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-3">{t('instagramGenerator.styles')}:</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {['emojis', 'engaging', 'professional', 'funny', 'inspirational', 'casual'].map((style) => (
+                      <button
+                        key={style}
+                        onClick={() => handleStyleToggle(style)}
+                        className={`style-card glass px-3 py-2 rounded-lg text-sm transition-colors ${
+                          formData.styles.includes(style) ? "selected border-primary bg-primary/10" : ""
+                        }`}
+                      >
+                        {style.charAt(0).toUpperCase() + style.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
           </div>
 
@@ -310,7 +337,7 @@ export default function InstagramGenerator() {
               disabled={generateMutation.isPending}
               className="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
             >
-              {generateMutation.isPending ? "Generating..." : "Generate Content"}
+              {generateMutation.isPending ? t('instagramGenerator.generating') : t('instagramGenerator.generate')}
             </Button>
           </div>
         </div>

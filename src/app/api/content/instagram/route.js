@@ -4,7 +4,7 @@ import { generateWithGemini, createInstagramPrompt } from '@/lib/gemini';
 
 export async function POST(request) {
   try {
-    const { topic, contentType, variations, options } = await request.json();
+    const { topic, contentType, variations, options, wordCount } = await request.json();
     
     // Check authentication
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -40,7 +40,7 @@ export async function POST(request) {
     }
 
     // Generate content with Gemini AI
-    const prompt = createInstagramPrompt(topic, contentType || 'post', { ...options, variations });
+    const prompt = createInstagramPrompt(topic, contentType || 'post', { ...options, variations, wordCount: wordCount || 100 });
     const aiResponse = await generateWithGemini(prompt);
     
     let content;

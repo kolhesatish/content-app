@@ -4,7 +4,7 @@ import { generateWithGemini, createLinkedInPrompt } from '@/lib/gemini';
 
 export async function POST(request) {
   try {
-    const { topic, style, variations } = await request.json();
+    const { topic, style, variations, wordCount } = await request.json();
     
     // Check authentication
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -40,7 +40,7 @@ export async function POST(request) {
     }
 
     // Generate content with Gemini AI
-    const prompt = createLinkedInPrompt(topic, style || 'professional', { variations });
+    const prompt = createLinkedInPrompt(topic, style || 'professional', { variations, wordCount: wordCount || 200 });
     const aiResponse = await generateWithGemini(prompt);
     
     let content;

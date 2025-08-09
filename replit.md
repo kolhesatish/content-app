@@ -109,6 +109,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (2024)
 
+**Multi-language Support & Word Count Feature (August 2025)**
+- ✓ Added complete Marathi language translation support throughout the application
+- ✓ Implemented language selector component in navigation with English/Marathi toggle
+- ✓ Added word count selection feature for content generation (50, 100, 200, 300, 500 words)
+- ✓ Updated Instagram and LinkedIn generators with word count parameter integration
+- ✓ Enhanced AI prompts to respect word count specifications for better content control
+- ✓ Created comprehensive language context with translation functions and localStorage persistence
+- ✓ Updated all UI components to use translation keys for consistent multi-language support
+- ✓ Modified API endpoints to handle and pass word count parameters to Gemini AI
+- ✓ Users can now generate content in their preferred language and specify exact word counts
+
 **Content Generation Enhancement & Authentication Fixes (August 2025)**
 - ✓ Fixed MongoDB ObjectId authentication issue that was causing 401 errors
 - ✓ Implemented multiple content variations (5 options) for both Instagram and LinkedIn

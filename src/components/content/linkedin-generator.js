@@ -5,18 +5,22 @@ import { useMutation } from '@tanstack/react-query'
 import { Copy, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { AuthModal } from '@/components/auth/auth-modal'
 
 export default function LinkedInGenerator() {
   const { toast } = useToast()
   const { user, getToken, updateCredits } = useAuth()
+  const { t } = useLanguage()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     topic: '',
     style: 'professional',
-    variations: 5
+    variations: 5,
+    wordCount: 200
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -99,7 +103,8 @@ export default function LinkedInGenerator() {
     generateMutation.mutate({
       topic: formData.topic,
       style: formData.style,
-      variations: formData.variations
+      variations: formData.variations,
+      wordCount: formData.wordCount
     })
   }
 
@@ -122,7 +127,7 @@ export default function LinkedInGenerator() {
   }
 
   const resetForm = () => {
-    setFormData({ topic: '', style: 'professional', variations: 5 })
+    setFormData({ topic: '', style: 'professional', variations: 5, wordCount: 200 })
     setGeneratedContent(null)
   }
 
@@ -131,7 +136,7 @@ export default function LinkedInGenerator() {
   }
 
   const styles = [
-    { value: 'professional', label: 'Professional' },
+    { value: 'professional', label: t('linkedinGenerator.professional') },
     { value: 'story', label: 'Story-driven' },
     { value: 'insights', label: 'Insights' },
     { value: 'question', label: 'Question' }
@@ -140,22 +145,22 @@ export default function LinkedInGenerator() {
   return (
     <div className="animate-slide-up">
       <div className="glass-card rounded-2xl p-8 mb-8">
-        <h2 className="text-2xl font-bold mb-6">What would you like to post about?</h2>
+        <h2 className="text-2xl font-bold mb-6">{t('linkedinGenerator.title')}</h2>
         
         <div className="space-y-6 mb-8">
           <div>
-            <label className="block text-sm font-medium mb-3">Topic or idea for your LinkedIn post</label>
+            <label className="block text-sm font-medium mb-3">{t('linkedinGenerator.topic')}</label>
             <Textarea
               value={formData.topic}
               onChange={(e) => setFormData(prev => ({ ...prev, topic: e.target.value }))}
               className="w-full bg-gray-900/50 border border-gray-700 rounded-xl p-4 text-white placeholder-gray-400 focus:border-primary focus:outline-none resize-none"
               rows={4}
-              placeholder="e.g., Lessons learned from a failed project, Industry trends in 2024, Team management insights, Career advice..."
+              placeholder={t('linkedinGenerator.topicPlaceholder')}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-3">Post style (optional)</label>
+            <label className="block text-sm font-medium mb-3">{t('linkedinGenerator.style')}</label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {styles.map(({ value, label }) => (
                 <button
@@ -169,6 +174,25 @@ export default function LinkedInGenerator() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-3">{t('linkedinGenerator.wordCount')}:</label>
+            <Select
+              value={formData.wordCount.toString()}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, wordCount: parseInt(value) }))}
+            >
+              <SelectTrigger className="w-full max-w-xs">
+                <SelectValue placeholder={t('linkedinGenerator.wordCount')} />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(t('wordCounts')).map(([count, label]) => (
+                  <SelectItem key={count} value={count}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
@@ -200,10 +224,10 @@ export default function LinkedInGenerator() {
           {generateMutation.isPending ? (
             <>
               <RefreshCw className="mr-2 animate-spin" size={16} />
-              Generating...
+              {t('linkedinGenerator.generating')}
             </>
           ) : (
-            "Generate LinkedIn Post"
+            t('linkedinGenerator.generate')
           )}
         </Button>
       </div>

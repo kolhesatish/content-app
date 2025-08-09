@@ -5,20 +5,22 @@ import { usePathname } from 'next/navigation'
 import { Menu, X, User, LogOut, Coins } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '@/hooks/use-auth'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { AuthModal } from '@/components/auth/auth-modal'
 import { Button } from '@/components/ui/button'
+import { LanguageSelector } from '@/components/ui/language-selector'
 
 export default function Navigation() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const { user, logout, login } = useAuth()
-
+  const { t } = useLanguage()
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/instagram', label: 'Instagram' },
-    { path: '/linkedin', label: 'LinkedIn' },
+    { path: '/', label: t('home') },
+    { path: '/instagram', label: t('instagram') },
+    { path: '/linkedin', label: t('linkedin') },
   ]
 
   const handleAuthSuccess = (userData) => {
@@ -52,11 +54,13 @@ export default function Navigation() {
                 </Link>
               ))}
               
+              <LanguageSelector />
+              
               {user ? (
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <Coins className="w-4 h-4" />
-                    <span>{user.credits || 0} credits</span>
+                    <span>{user.credits || 0} {t('credits')}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
@@ -69,7 +73,7 @@ export default function Navigation() {
                     className="flex items-center space-x-1"
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
+                    <span>{t('logout')}</span>
                   </Button>
                 </div>
               ) : (
@@ -77,7 +81,7 @@ export default function Navigation() {
                   onClick={() => setIsAuthModalOpen(true)}
                   className="gradient-bg px-4 py-2 rounded-lg text-white font-medium hover:opacity-90 transition-opacity"
                 >
-                  Get Started
+                  {t('getStarted')}
                 </Button>
               )}
             </div>
@@ -108,11 +112,14 @@ export default function Navigation() {
                   {item.label}
                 </Link>
               ))}
+              <div className="px-3 py-2">
+                <LanguageSelector />
+              </div>
               {user ? (
                 <div className="flex flex-col space-y-2 px-3 py-2">
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <Coins className="w-4 h-4" />
-                    <span>{user.credits} credits</span>
+                    <span>{user.credits} {t('credits')}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
@@ -125,7 +132,7 @@ export default function Navigation() {
                     className="flex items-center space-x-1 w-full"
                   >
                     <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
+                    <span>{t('logout')}</span>
                   </Button>
                 </div>
               ) : (
@@ -133,7 +140,7 @@ export default function Navigation() {
                   onClick={() => setIsAuthModalOpen(true)}
                   className="w-full mt-4 gradient-bg px-4 py-2 rounded-lg text-white font-medium hover:opacity-90 transition-opacity"
                 >
-                  Get Started
+                  {t('getStarted')}
                 </Button>
               )}
             </div>

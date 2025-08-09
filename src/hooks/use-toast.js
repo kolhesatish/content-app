@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 3000
 
 let count = 0
 
@@ -39,25 +39,17 @@ function reducer(state, action) {
         ),
       }
 
-    case 'DISMISS_TOAST': {
-      const { toastId } = action
+   case 'DISMISS_TOAST': {
+  const { toastId } = action;
 
-      if (toastId) {
-        dispatch({
-          type: 'REMOVE_TOAST',
-          toastId: toastId,
-        })
-      } else {
-        return {
-          ...state,
-          toasts: state.toasts.map((t) => ({
-            ...t,
-            open: false,
-          })),
-        }
-      }
-      return state
-    }
+  return {
+    ...state,
+    toasts: state.toasts.map((t) =>
+      t.id === toastId ? { ...t, open: false } : t
+    ),
+  };
+}
+
     case 'REMOVE_TOAST':
       return {
         ...state,
@@ -66,7 +58,7 @@ function reducer(state, action) {
   }
 }
 
-function toast({ ...props }) {
+function toast({duration = 3000, ...props }) {
   const id = genId()
 
   const update = (props) =>
@@ -87,6 +79,15 @@ function toast({ ...props }) {
       },
     },
   })
+ setTimeout(() => {
+  // This triggers the "close" (open: false)
+  dispatch({ type: 'DISMISS_TOAST', toastId: id })
+
+  // Then remove after the toast animation finishes
+  setTimeout(() => {
+    dispatch({ type: 'REMOVE_TOAST', toastId: id })
+  }, TOAST_REMOVE_DELAY)
+}, duration)
 
   return {
     id: id,

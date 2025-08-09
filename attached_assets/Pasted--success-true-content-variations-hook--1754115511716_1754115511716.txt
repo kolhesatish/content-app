@@ -1,0 +1,126 @@
+{
+    "success": true,
+    "content": {
+        "variations": [
+            {
+                "hook": "🤯 Wait, did that really just happen?!",
+                "script_outline": [
+                    "Visual: Quick cuts of unexpected and funny travel moments - e.g., tripping, awkward encounters, surprising wildlife. (0-5 seconds)",
+                    "Voiceover: \"Travel isn't always glamorous! Here are some hilariously unexpected things that happened on my last trip.\"",
+                    "Visual: Continue with funny clips, adding text overlays like \"That face when...\", \"My reaction when...\"",
+                    "Voiceover: \"Embrace the chaos, the unexpected is what makes travel memorable!\"",
+                    "Visual: End with a smiling selfie or group shot. (25-30 seconds)"
+                ],
+                "call_to_action": "Share your funniest travel mishap in the comments! 👇",
+                "caption": "Travel doesn't always go as planned! 😅 Share your most hilarious travel mishap below! 👇 #TravelFails #FunnyTravelMoments #TravelHumor",
+                "hashtags": [
+                    "#TravelFails",
+                    "#FunnyTravelMoments",
+                    "#TravelHumor",
+                    "#TravelBloopers",
+                    "#TravelLife",
+                    "#UnexpectedTravel",
+                    "#AdventureTime",
+                    "#TravelDiaries"
+                ],
+                "style": "Fast-paced, humorous, relatable"
+            },
+            {
+                "hook": "🤫 I'm about to reveal my hidden gem!",
+                "script_outline": [
+                    "Visual: Start with a captivating shot of a lesser-known beautiful location. (0-5 seconds)",
+                    "Voiceover: \"Tired of the same old tourist traps? Let me share my secret spot...\"",
+                    "Visual: Show different angles and details of the location, emphasizing its unique features.",
+                    "Voiceover: \"This hidden gem offers [mention unique benefit, e.g., tranquility, stunning views, delicious local food].\"",
+                    "Visual: Include yourself enjoying the location authentically. (25-30 seconds)"
+                ],
+                "call_to_action": "Tag someone who needs to see this! 🌍",
+                "caption": "Shhh! 🤫 This is my favorite hidden gem and I had to share it with you! Tag someone who needs to escape the crowds! 🌍 #HiddenGems #SecretSpot #TravelGoals #OffTheBeatenPath",
+                "hashtags": [
+                    "#HiddenGems",
+                    "#SecretSpot",
+                    "#TravelGoals",
+                    "#OffTheBeatenPath",
+                    "#ExploreMore",
+                    "#UndiscoveredPlaces",
+                    "#TravelInspiration",
+                    "#TravelAddict"
+                ],
+                "style": "Intriguing, mysterious, aspirational"
+            },
+            {
+                "hook": "💸 Travel on a budget? YES, it's possible!",
+                "script_outline": [
+                    "Visual: Display text overlay: \"TRAVELING ON A BUDGET\"",
+                    "Voiceover: \"Want to see the world without breaking the bank? Here are my top tips!\"",
+                    "Visual: Quick cuts showcasing budget-friendly travel hacks - e.g., cooking your own meals, free activities, staying in hostels. (5-15 seconds)",
+                    "Voiceover: \"Tip #1: Cook your own meals! #2: Take advantage of free walking tours! #3: Stay in hostels and meet new people!\"",
+                    "Visual: Show yourself enjoying budget-friendly activities. (25-30 seconds)"
+                ],
+                "call_to_action": "What are your favorite budget travel tips? Share them below! 👇",
+                "caption": "Traveling doesn't have to cost a fortune! 💸 Here are my top tips for seeing the world on a budget. What are yours? 👇 #BudgetTravel #TravelHacks #CheapTravel #TravelOnABudget",
+                "hashtags": [
+                    "#BudgetTravel",
+                    "#TravelHacks",
+                    "#CheapTravel",
+                    "#TravelOnABudget",
+                    "#TravelTips",
+                    "#TravelDeals",
+                    "#MoneySavingTips",
+                    "#TravelMore"
+                ],
+                "style": "Informative, practical, empowering"
+            },
+            {
+                "hook": "✨ This place changed my life...",
+                "script_outline": [
+                    "Visual: Slow-motion footage of a breathtaking landscape or cultural experience. (0-5 seconds)",
+                    "Voiceover: \"Sometimes, a place can leave a lasting impact on you...\"",
+                    "Visual: Continue showcasing the location with emotional music, focusing on the feelings it evokes.",
+                    "Voiceover: \"[Share a brief personal reflection on how the place affected you. e.g., It challenged my perspective, helped me connect with nature, etc.]\"",
+                    "Visual: End with a peaceful shot of yourself immersed in the environment. (25-30 seconds)"
+                ],
+                "call_to_action": "What's a place that has changed your life? Let me know in the comments! ❤️",
+                "caption": "This place... it changed everything. ✨ Have you ever experienced a place that left a lasting impact on you? Share your story below! ❤️ #TravelTransformation #MeaningfulTravel #TravelStories #SoulfulTravel",
+                "hashtags": [
+                    "#TravelTransformation",
+                    "#MeaningfulTravel",
+                    "#TravelStories",
+                    "#SoulfulTravel",
+                    "#TravelInspiration",
+                    "#TravelPhotography",
+                    "#Wanderlust",
+                    "#TravelGram"
+                ],
+                "style": "Emotional, reflective, inspiring"
+            },
+            {
+                "hook": "✈️ Pack with me in 60 seconds!",
+                "script_outline": [
+                    "Visual: Fast-paced filming of packing essential items into a suitcase or backpack. (0-5 seconds)",
+                    "Voiceover: \"Jetting off soon? Let's pack together!\"",
+                    "Visual: Show each item briefly, mentioning its purpose and why it's essential. Add text overlays with the item names. (5-25 seconds)",
+                    "Voiceover: \"Passport, sunscreen, universal adapter, comfy shoes...\"",
+                    "Visual: Show the packed bag and yourself ready to go. (25-30 seconds)"
+                ],
+                "call_to_action": "What's your must-have travel item? 🧳 Tell me in the comments! 👇",
+                "caption": "Packing essentials for my next adventure! ✈️ What's the one thing you never travel without? 🧳 Let me know! 👇 #PackingHacks #TravelEssentials #TravelPacking #PackWithMe",
+                "hashtags": [
+                    "#PackingHacks",
+                    "#TravelEssentials",
+                    "#TravelPacking",
+                    "#PackWithMe",
+                    "#TravelTips",
+                    "#TravelGear",
+                    "#Wanderlust",
+                    "#TravelLife"
+                ],
+                "style": "Practical, efficient, visually appealing"
+            }
+        ]
+    },
+    "platform": "instagram",
+    "contentType": "reel",
+    "topic": "travel",
+    "creditsRemaining": 986
+}

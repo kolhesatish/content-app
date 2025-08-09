@@ -1,4 +1,4 @@
-// File: C:\Users\SATISH KOLHE\Downloads\SocialSpark (2)\SocialSpark\src\app\linkedin\page.js
+// File: C:\Users\SATISH KOLHE\Downloads\content-app (3)\content-app\src\app\linkedin\page.js
 import * as entry from '../../../../src/app/linkedin/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

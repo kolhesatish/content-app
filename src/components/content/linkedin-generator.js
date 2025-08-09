@@ -15,7 +15,8 @@ export default function LinkedInGenerator() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const [formData, setFormData] = useState({
     topic: '',
-    style: 'professional'
+    style: 'professional',
+    variations: 5
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -44,13 +45,15 @@ export default function LinkedInGenerator() {
       return result
     },
     onSuccess: (data) => {
-      setGeneratedContent(data)
+      // Extract the content.variations from the API response
+      setGeneratedContent(data.content)
       if (data.creditsRemaining !== undefined) {
         updateCredits(data.creditsRemaining)
       }
       toast({
         title: 'Content Generated!',
-        description: `Successfully created LinkedIn content. Credits remaining: ${data.creditsRemaining}`,
+        description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} LinkedIn content variations. Credits remaining: ${data.creditsRemaining}`,
+        duration: 3000,
       })
     },
     onError: (error) => {
@@ -62,37 +65,41 @@ export default function LinkedInGenerator() {
         title: 'Error',
         description: error.message || 'Failed to generate content. Please try again.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   })
 
   const handleGenerate = () => {
-    // if (!user) {
-    //   setIsAuthModalOpen(true)
-    //   return
-    // }
+    if (!user) {
+      setIsAuthModalOpen(true)
+      return
+    }
 
     if (!formData.topic.trim()) {
       toast({
         title: 'Error',
         description: 'Please enter a topic for your LinkedIn post.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
 
-    // if (user.credits <= 0) {
-    //   toast({
-    //     title: 'No Credits',
-    //     description: 'You need credits to generate content. You get 2 free credits daily!',
-    //     variant: 'destructive',
-    //   })
-    //   return
-    // }
+    if (user.credits <= 0) {
+      toast({
+        title: 'No Credits',
+        description: 'You need credits to generate content. You get 2 free credits daily!',
+        variant: 'destructive',
+        duration: 3000,
+      })
+      return
+    }
 
     generateMutation.mutate({
       topic: formData.topic,
-      style: formData.style
+      style: formData.style,
+      variations: formData.variations
     })
   }
 
@@ -102,18 +109,20 @@ export default function LinkedInGenerator() {
       toast({
         title: 'Copied!',
         description: 'Content copied to clipboard.',
+        duration: 3000,
       })
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to copy content.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   }
 
   const resetForm = () => {
-    setFormData({ topic: '', style: 'professional' })
+    setFormData({ topic: '', style: 'professional', variations: 5 })
     setGeneratedContent(null)
   }
 
@@ -161,6 +170,26 @@ export default function LinkedInGenerator() {
               ))}
             </div>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-3">Number of content variations</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => setFormData(prev => ({ ...prev, variations: num }))}
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                    formData.variations === num 
+                      ? "bg-primary text-white" 
+                      : "glass hover:bg-gray-700"
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">Choose how many different content options you want to generate</p>
+          </div>
         </div>
 
         <Button
@@ -180,12 +209,11 @@ export default function LinkedInGenerator() {
       </div>
 
       {/* Generated Content */}
-      {generatedContent && (
+      {generatedContent && generatedContent.variations && (
         <div className="space-y-6">
-          {/* Generated Post */}
           <div className="glass-card rounded-2xl p-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Generated LinkedIn Post</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Generated LinkedIn Content Variations</h3>
               <Button
                 onClick={regenerate}
                 disabled={generateMutation.isPending}
@@ -196,59 +224,83 @@ export default function LinkedInGenerator() {
                 Regenerate
               </Button>
             </div>
-            <div className="bg-gray-900/50 rounded-xl p-6 mb-4">
-              <p className="leading-relaxed whitespace-pre-line">
-                {generatedContent.post}
-              </p>
-            </div>
-            <Button
-              onClick={() => copyToClipboard(generatedContent.post)}
-              variant="ghost"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              <Copy className="mr-2" size={16} />
-              Copy Post
-            </Button>
-          </div>
+            
+            <div className="space-y-6">
+              {generatedContent.variations.map((variation, index) => (
+                <div key={index} className="border border-gray-700 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-medium">Option {index + 1}</h4>
+                    {variation.tone && (
+                      <span className="text-sm bg-primary/20 text-primary px-3 py-1 rounded-full">
+                        {variation.tone}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium text-gray-400 mb-2 block">Post Content</label>
+                    <div className="bg-gray-900/50 p-4 rounded-lg border">
+                      <p className="whitespace-pre-wrap leading-relaxed">{variation.caption}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(variation.caption)}
+                      className="mt-2 text-sm text-gray-400 hover:text-white"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy Post
+                    </Button>
+                  </div>
 
-          {/* Generated Hashtags */}
-          <div className="glass-card rounded-2xl p-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Suggested Hashtags</h3>
-              <span className="text-sm text-gray-400">{generatedContent.hashtags?.length || 0} hashtags</span>
-            </div>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {generatedContent.hashtags?.map((hashtag, index) => (
-                <span
-                  key={index}
-                  onClick={() => copyToClipboard(hashtag)}
-                  className="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors"
-                >
-                  {hashtag}
-                </span>
+                  {variation.hashtags && variation.hashtags.length > 0 && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">Hashtags ({variation.hashtags.length})</label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {variation.hashtags.map((hashtag, hashIndex) => (
+                          <span
+                            key={hashIndex}
+                            onClick={() => copyToClipboard(hashtag)}
+                            className="bg-primary/20 text-primary px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors"
+                          >
+                            {hashtag}
+                          </span>
+                        ))}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(variation.hashtags.join(' '))}
+                        className="text-sm text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy All Hashtags
+                      </Button>
+                    </div>
+                  )}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(`${variation.caption}\n\n${variation.hashtags?.join(' ') || ''}`)}
+                    className="w-full mt-4"
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Complete Post
+                  </Button>
+                </div>
               ))}
             </div>
-            <Button
-              onClick={() => copyToClipboard(generatedContent.hashtags?.join(' ') || '')}
-              variant="ghost"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
-            >
-              <Copy className="mr-2" size={16} />
-              Copy All Hashtags
-            </Button>
-          </div>
 
-          <div className="flex gap-4">
-            <Button
-              onClick={resetForm}
-              variant="outline"
-              className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
-            >
-              Create New Post
-            </Button>
-            <Button className="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
-              Save Content
-            </Button>
+            <div className="flex gap-4 mt-8">
+              <Button
+                onClick={resetForm}
+                variant="outline"
+                className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+              >
+                Create New Post
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -256,7 +308,10 @@ export default function LinkedInGenerator() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        onSuccess={() => setIsAuthModalOpen(false)}
+        onSuccess={(userData) => {
+          setIsAuthModalOpen(false)
+          // The useAuth hook will automatically update the user state
+        }}
       />
     </div>
   )

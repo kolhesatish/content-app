@@ -18,7 +18,8 @@ export default function InstagramGenerator() {
     contentType: 'post',
     topic: '',
     captionPreference: 'yes',
-    styles: []
+    styles: [],
+    variations: 5
   })
   const [generatedContent, setGeneratedContent] = useState(null)
 
@@ -47,14 +48,16 @@ export default function InstagramGenerator() {
       return result
     },
     onSuccess: (data) => {
-      setGeneratedContent(data)
+      // Extract the content.variations from the API response
+      setGeneratedContent(data.content)
       setCurrentStep(3)
       if (data.creditsRemaining !== undefined) {
         updateCredits(data.creditsRemaining)
       }
       toast({
         title: 'Content Generated!',
-        description: `Successfully created ${formData.contentType} content. Credits remaining: ${data.creditsRemaining}`,
+        description: `Successfully created ${data.content.variations ? data.content.variations.length : 1} ${formData.contentType} variations. Credits remaining: ${data.creditsRemaining}`,
+        duration: 3000,
       })
     },
     onError: (error) => {
@@ -66,6 +69,7 @@ export default function InstagramGenerator() {
         title: 'Error',
         description: error.message || 'Failed to generate content. Please try again.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   })
@@ -94,6 +98,7 @@ export default function InstagramGenerator() {
         title: 'Error',
         description: 'Please enter a topic for your content.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -103,6 +108,7 @@ export default function InstagramGenerator() {
         title: 'No Credits',
         description: 'You need credits to generate content. You get 2 free credits daily!',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -110,6 +116,7 @@ export default function InstagramGenerator() {
     generateMutation.mutate({
       topic: formData.topic,
       contentType: formData.contentType,
+      variations: formData.variations,
       options: {
         captionPreference: formData.captionPreference,
         styles: formData.styles
@@ -123,12 +130,14 @@ export default function InstagramGenerator() {
       toast({
         title: 'Copied!',
         description: 'Content copied to clipboard.',
+        duration: 3000,
       })
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to copy content.',
         variant: 'destructive',
+        duration: 3000,
       })
     }
   }
@@ -139,7 +148,8 @@ export default function InstagramGenerator() {
       contentType: 'post',
       topic: '',
       captionPreference: 'yes',
-      styles: []
+      styles: [],
+      variations: 5
     })
     setGeneratedContent(null)
   }
@@ -267,6 +277,26 @@ export default function InstagramGenerator() {
             )}
           </div>
 
+          <div>
+            <label className="block text-sm font-medium mb-3">Number of content variations</label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(num => (
+                <button
+                  key={num}
+                  onClick={() => setFormData(prev => ({ ...prev, variations: num }))}
+                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                    formData.variations === num 
+                      ? "bg-primary text-white" 
+                      : "glass hover:bg-gray-700"
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-400 mt-1">Choose how many different content options you want to generate</p>
+          </div>
+
           <div className="flex gap-4">
             <Button
               onClick={() => setCurrentStep(1)}
@@ -287,79 +317,163 @@ export default function InstagramGenerator() {
       )}
 
       {/* Step 3: Generated Content */}
-      {currentStep === 3 && generatedContent && (
+      {currentStep === 3 && generatedContent && generatedContent.variations && (
         <div className="space-y-6">
-          {/* Generated Caption */}
-          {formData.captionPreference === 'yes' && (
-            <div className="glass-card rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold">Generated Caption</h3>
-                <Button
-                  onClick={regenerate}
-                  disabled={generateMutation.isPending}
-                  variant="ghost"
-                  className="text-primary hover:text-purple-400 transition-colors"
-                >
-                  <RefreshCw className="mr-2" size={16} />
-                  Regenerate
-                </Button>
-              </div>
-              <div className="bg-gray-900/50 rounded-xl p-4 mb-4">
-                <p className="leading-relaxed whitespace-pre-line">
-                  {generatedContent.caption}
-                </p>
-              </div>
+          <div className="glass-card rounded-2xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold">Generated Instagram Content Variations</h3>
               <Button
-                onClick={() => copyToClipboard(generatedContent.caption)}
+                onClick={regenerate}
+                disabled={generateMutation.isPending}
                 variant="ghost"
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                className="text-primary hover:text-purple-400 transition-colors"
               >
-                <Copy className="mr-2" size={16} />
-                Copy Caption
+                <RefreshCw className="mr-2" size={16} />
+                Regenerate
               </Button>
             </div>
-          )}
+            
+            <div className="space-y-6">
+              {generatedContent.variations.map((variation, index) => (
+                <div key={index} className="border border-gray-700 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-medium">Option {index + 1}</h4>
+                    {variation.style && (
+                      <span className="text-sm bg-primary/20 text-primary px-3 py-1 rounded-full">
+                        {variation.style}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Caption for Posts/Stories, Hook for Reels */}
+                  {formData.captionPreference === 'yes' && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">
+                        {formData.contentType === 'reel' ? 'Hook & Caption' : 'Caption'}
+                      </label>
+                      <div className="bg-gray-900/50 p-4 rounded-lg border space-y-2">
+                        {formData.contentType === 'reel' ? (
+                          <>
+                            {variation.hook && (
+                              <div>
+                                <strong className="text-primary">Hook:</strong> {variation.hook}
+                              </div>
+                            )}
+                            {variation.caption && (
+                              <div>
+                                <strong className="text-primary">Caption:</strong> {variation.caption}
+                              </div>
+                            )}
+                            {variation.call_to_action && (
+                              <div>
+                                <strong className="text-primary">Call to Action:</strong> {variation.call_to_action}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <p className="whitespace-pre-wrap leading-relaxed">{variation.caption}</p>
+                        )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(formData.contentType === 'reel' 
+                          ? `${variation.hook || ''}\n\n${variation.caption || ''}\n\n${variation.call_to_action || ''}` 
+                          : variation.caption
+                        )}
+                        className="mt-2 text-sm text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy {formData.contentType === 'reel' ? 'Script' : 'Caption'}
+                      </Button>
+                    </div>
+                  )}
 
-          {/* Generated Hashtags */}
-          {formData.contentType !== 'story' && generatedContent.hashtags?.length > 0 && (
-            <div className="glass-card rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold">Suggested Hashtags</h3>
-                <span className="text-sm text-gray-400">{generatedContent.hashtags.length} hashtags</span>
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {generatedContent.hashtags.map((hashtag, index) => (
-                  <span
-                    key={index}
-                    onClick={() => copyToClipboard(hashtag)}
-                    className="hashtag-tag bg-primary/20 text-primary px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors"
+                  {/* Script Outline for Reels */}
+                  {formData.contentType === 'reel' && variation.script_outline && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">Script Outline</label>
+                      <div className="bg-gray-900/50 p-4 rounded-lg border">
+                        <ol className="list-decimal list-inside space-y-1">
+                          {variation.script_outline.map((step, stepIndex) => (
+                            <li key={stepIndex} className="text-sm leading-relaxed">{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(variation.script_outline.join('\n'))}
+                        className="mt-2 text-sm text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Script
+                      </Button>
+                    </div>
+                  )}
+
+                  {formData.contentType !== 'story' && variation.hashtags && variation.hashtags.length > 0 && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-400 mb-2 block">Hashtags ({variation.hashtags.length})</label>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {variation.hashtags.map((hashtag, hashIndex) => (
+                          <span
+                            key={hashIndex}
+                            onClick={() => copyToClipboard(hashtag)}
+                            className="bg-primary/20 text-primary px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-primary/30 transition-colors"
+                          >
+                            {hashtag}
+                          </span>
+                        ))}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(variation.hashtags.join(' '))}
+                        className="text-sm text-gray-400 hover:text-white"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy All Hashtags
+                      </Button>
+                    </div>
+                  )}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      let completeContent = '';
+                      if (formData.contentType === 'reel') {
+                        completeContent = `${variation.hook || ''}\n\n${variation.caption || ''}\n\n${variation.call_to_action || ''}`;
+                        if (variation.hashtags && variation.hashtags.length > 0) {
+                          completeContent += '\n\n' + variation.hashtags.join(' ');
+                        }
+                      } else {
+                        completeContent = variation.caption || '';
+                        if (formData.contentType !== 'story' && variation.hashtags && variation.hashtags.length > 0) {
+                          completeContent += '\n\n' + variation.hashtags.join(' ');
+                        }
+                      }
+                      copyToClipboard(completeContent);
+                    }}
+                    className="w-full mt-4"
                   >
-                    {hashtag}
-                  </span>
-                ))}
-              </div>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Complete {formData.contentType === 'reel' ? 'Reel Content' : 'Post'}
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-4 mt-8">
               <Button
-                onClick={() => copyToClipboard(generatedContent.hashtags.join(' '))}
-                variant="ghost"
-                className="text-sm text-gray-400 hover:text-white transition-colors"
+                onClick={resetForm}
+                variant="outline"
+                className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
               >
-                <Copy className="mr-2" size={16} />
-                Copy All Hashtags
+                Create New Content
               </Button>
             </div>
-          )}
-
-          <div className="flex gap-4">
-            <Button
-              onClick={resetForm}
-              variant="outline"
-              className="flex-1 glass py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
-            >
-              Create New Content
-            </Button>
-            <Button className="flex-1 gradient-bg py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity">
-              Save Content
-            </Button>
           </div>
         </div>
       )}

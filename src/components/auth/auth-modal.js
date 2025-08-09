@@ -7,7 +7,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }) {
   const [mode, setMode] = useState('login'); // 'login' or 'register'
 
   const handleSuccess = (user) => {
-    onSuccess(user);
+    if (onSuccess) {
+      onSuccess(user);
+    }
     onClose();
   };
 

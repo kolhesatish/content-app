@@ -12,7 +12,8 @@ export default function Navigation() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout, login } = useAuth()
+
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -22,6 +23,7 @@ export default function Navigation() {
 
   const handleAuthSuccess = (userData) => {
     setIsAuthModalOpen(false)
+    // Auth context will automatically update the user state
   }
 
   return (
@@ -54,11 +56,11 @@ export default function Navigation() {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <Coins className="w-4 h-4" />
-                    <span>{user.credits} credits</span>
+                    <span>{user.credits || 0} credits</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
-                    <span>{user.username}</span>
+                    <span>{user.username || 'User'}</span>
                   </div>
                   <Button
                     variant="outline"

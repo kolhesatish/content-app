@@ -1,4 +1,4 @@
-// File: C:\Users\SATISH KOLHE\Downloads\SocialSpark (2)\SocialSpark\src\app\api\auth\me\route.js
+// File: C:\Users\SATISH KOLHE\Downloads\content-app (3)\content-app\src\app\api\auth\me\route.js
 import * as entry from '../../../../../../src/app/api/auth/me/route.js'
 import type { NextRequest } from 'next/server.js'
 

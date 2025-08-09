@@ -4,7 +4,7 @@ import { generateWithGemini, createLinkedInPrompt } from '@/lib/gemini';
 
 export async function POST(request) {
   try {
-    const { topic, style } = await request.json();
+    const { topic, style, variations } = await request.json();
     
     // Check authentication
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -40,20 +40,39 @@ export async function POST(request) {
     }
 
     // Generate content with Gemini AI
-    const prompt = createLinkedInPrompt(topic, style || 'professional');
+    const prompt = createLinkedInPrompt(topic, style || 'professional', { variations });
     const aiResponse = await generateWithGemini(prompt);
     
     let content;
     try {
-      // Try to parse as JSON first
-      content = JSON.parse(aiResponse);
-    } catch (parseError) {
-      // If JSON parsing fails, create structured response from text
-      const lines = aiResponse.split('\n').filter(line => line.trim());
+      // Clean the response - remove markdown formatting
+      const cleanResponse = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const parsed = JSON.parse(cleanResponse);
+      
       content = {
-        caption: lines.slice(0, 3).join('\n'),
-        hashtags: ['#professional', '#linkedin', '#career'],
-        engagementTips: lines.slice(-2) || ['Ask thought-provoking questions', 'Share industry insights']
+        variations: parsed.variations || []
+      };
+      
+      // Ensure we have variations
+      if (!content.variations.length) {
+        throw new Error('No variations generated');
+      }
+    } catch (parseError) {
+      console.error('JSON parsing failed:', parseError, 'Raw response:', aiResponse);
+      // Fallback to creating structured response
+      content = {
+        variations: [
+          {
+            caption: `Excited to share my thoughts on ${topic}. In today's professional landscape, this topic has become increasingly important for career growth and industry innovation.`,
+            hashtags: ['#professional', '#linkedin', '#career', '#industry'],
+            tone: 'professional'
+          },
+          {
+            caption: `Let's discuss ${topic}. I've been reflecting on how this impacts our work and wanted to share some insights with my network.`,
+            hashtags: ['#networking', '#insights', '#professional', '#discussion'],
+            tone: 'conversational'
+          }
+        ]
       };
     }
 

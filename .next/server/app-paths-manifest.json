@@ -1,1 +1,6 @@
-{}
+{
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/content/instagram/route": "app/api/content/instagram/route.js",
+  "/page": "app/page.js",
+  "/instagram/page": "app/instagram/page.js"
+}

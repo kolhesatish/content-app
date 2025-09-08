@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { Copy, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import SaveActions from '@/components/common/SaveActions'
+import SummaryToggle from '@/components/common/SummaryToggle'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
@@ -276,6 +278,18 @@ export default function LinkedInGenerator() {
                       Copy Post
                     </Button>
                   </div>
+
+                  <div className="pt-2">
+                    <SaveActions
+                      contentId={`li-${index}`}
+                      title={variation.caption?.slice(0, 80) || 'LinkedIn Content'}
+                      url={typeof window !== 'undefined' ? window.location.href : ''}
+                    />
+                  </div>
+
+                  {variation.caption && (
+                    <SummaryToggle text={variation.caption} />
+                  )}
 
                   {variation.hashtags && variation.hashtags.length > 0 && (
                     <div>

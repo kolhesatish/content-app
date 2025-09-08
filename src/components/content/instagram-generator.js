@@ -10,6 +10,8 @@ import { useToast } from '@/hooks/use-toast'
 import { useAuth } from '@/hooks/use-auth'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { AuthModal } from '@/components/auth/auth-modal'
+import SaveActions from '@/components/common/SaveActions'
+import SummaryToggle from '@/components/common/SummaryToggle'
 
 export default function InstagramGenerator() {
   const { toast } = useToast()
@@ -463,6 +465,18 @@ export default function InstagramGenerator() {
                         Copy All Hashtags
                       </Button>
                     </div>
+                  )}
+
+                  <div className="pt-2">
+                    <SaveActions
+                      contentId={`ig-${index}`}
+                      title={variation.caption?.slice(0, 80) || 'Instagram Content'}
+                      url={typeof window !== 'undefined' ? window.location.href : ''}
+                    />
+                  </div>
+
+                  {variation.caption && (
+                    <SummaryToggle text={formData.contentType === 'reel' ? `${variation.hook || ''}\n${variation.caption}` : variation.caption} />
                   )}
 
                   <Button

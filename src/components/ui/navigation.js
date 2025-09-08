@@ -21,6 +21,8 @@ export default function Navigation() {
     { path: '/', label: t('home') },
     { path: '/instagram', label: t('instagram') },
     { path: '/linkedin', label: t('linkedin') },
+    { path: '/search', label: 'Search' },
+    { path: '/feed', label: 'Feed' },
   ]
 
   const handleAuthSuccess = (userData) => {
@@ -62,6 +64,9 @@ export default function Navigation() {
                     <Coins className="w-4 h-4" />
                     <span>{user.credits || 0} {t('credits')}</span>
                   </div>
+                  <Link href="/profile" className={`nav-link text-gray-300 hover:text-white transition-colors ${pathname === '/profile' ? 'active text-primary' : ''}`}>
+                    Profile
+                  </Link>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
                     <span>{user.username || 'User'}</span>
@@ -121,6 +126,13 @@ export default function Navigation() {
                     <Coins className="w-4 h-4" />
                     <span>{user.credits} {t('credits')}</span>
                   </div>
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block px-3 py-2 text-base font-medium transition-colors ${pathname === '/profile' ? 'text-primary' : 'text-gray-300 hover:text-white'}`}
+                  >
+                    Profile
+                  </Link>
                   <div className="flex items-center space-x-2 text-sm text-gray-300">
                     <User className="w-4 h-4" />
                     <span>{user.username}</span>

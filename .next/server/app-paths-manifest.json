@@ -1,6 +1,10 @@
 {
-  "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/content/instagram/route": "app/api/content/instagram/route.js",
+  "/api/content-feed/route": "app/api/content-feed/route.js",
+  "/api/profile/route": "app/api/profile/route.js",
   "/page": "app/page.js",
-  "/instagram/page": "app/instagram/page.js"
+  "/instagram/page": "app/instagram/page.js",
+  "/search/page": "app/search/page.js",
+  "/feed/page": "app/feed/page.js",
+  "/linkedin/page": "app/linkedin/page.js",
+  "/profile/page": "app/profile/page.js"
 }

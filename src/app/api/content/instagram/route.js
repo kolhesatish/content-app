@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getUserFromToken, useCredit } from '@/lib/auth';
 import { generateWithGemini, createInstagramPrompt } from '@/lib/gemini';
+import { getDb } from '@/lib/api';
 
 export async function POST(request) {
   try {
@@ -74,6 +75,34 @@ export async function POST(request) {
           }
         ]
       };
+    }
+
+    // Persist generated variations for search/feed
+    try {
+      const db = await getDb();
+      const now = new Date();
+      const items = Array.isArray(content?.variations) ? content.variations : [];
+      if (items.length > 0) {
+        const docs = items.map((v) => ({
+          userId: user._id,
+          creatorId: user._id,
+          creatorName: user.username || 'User',
+          platform: 'instagram',
+          type: contentType || 'post',
+          topic,
+          caption: v.caption || '',
+          hashtags: Array.isArray(v.hashtags) ? v.hashtags : [],
+          style: v.style || v.tone || '',
+          scriptOutline: v.script_outline || [],
+          createdAt: now,
+          length: (v.caption || '').length,
+        }));
+        if (docs.length) {
+          await db.collection('generations').insertMany(docs);
+        }
+      }
+    } catch (e) {
+      console.warn('Persist generation failed (non-blocking):', e);
     }
 
     return NextResponse.json({
